@@ -1,4 +1,4 @@
-import { Button, Affix, Row, Col, Divider } from 'antd'
+import { Button, Affix, Row, Col, Divider, message } from 'antd'
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { useSetState } from 'ahooks'
 
@@ -6,13 +6,17 @@ import ModalUpdate from './components/modalUpdate'
 import imgLogo from './assets/images/logo.png'
 import './styles/App.less'
 
+import { LogInSuccess } from '../wailsjs/go/main/App'
+
 function App() {
   const [state, setState] = useSetState({
     isModalUpdate: false,
   })
+  const [messageApi, contextHolder] = message.useMessage()
 
   return (
     <div className='rss-app'>
+      {contextHolder}
       <Affix offsetTop={0}>
         <header>
           <div className='left'>
@@ -63,6 +67,9 @@ function App() {
           }}
           onOk={(e) => {
             console.log({ e })
+            LogInSuccess(e).then((res) => {
+              message.info(res)
+            })
             setState({
               isModalUpdate: false,
             })
