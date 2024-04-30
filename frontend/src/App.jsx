@@ -6,7 +6,7 @@ import ModalUpdate from './components/modalUpdate'
 import imgLogo from './assets/images/logo.png'
 import './styles/App.less'
 
-import { LogInSuccess } from '../wailsjs/go/main/App'
+import { RssFeedAdd } from '../wailsjs/go/main/App'
 
 function App() {
   const [state, setState] = useSetState({
@@ -65,11 +65,12 @@ function App() {
               isModalUpdate: false,
             })
           }}
-          onOk={(e) => {
-            console.log({ e })
-            LogInSuccess(e).then((res) => {
-              message.info(res)
+          onOk={(url) => {
+            RssFeedAdd(url).then((res) => {
+              console.log({ res })
+              // message.info(res)
             })
+
             setState({
               isModalUpdate: false,
             })

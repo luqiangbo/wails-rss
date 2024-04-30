@@ -4,7 +4,7 @@ import { Modal, Input, message } from 'antd'
 
 export default function Index(props) {
   const [state, setState] = useSetState({
-    value: '',
+    value: 'https://feeds.feedburner.com/ruanyifeng',
   })
   const [messageApi, contextHolder] = message.useMessage()
 

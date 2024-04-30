@@ -6,6 +6,6 @@ export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
 
-export function LogInSuccess(arg1) {
-  return window['go']['main']['App']['LogInSuccess'](arg1);
+export function RssFeedAdd(arg1) {
+  return window['go']['main']['App']['RssFeedAdd'](arg1);
 }
