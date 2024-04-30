@@ -42,9 +42,17 @@ body {
       height: 200vh;
       border: 1px solid #999;
     }
+
     .menu {
       height: calc(100vh - 50px);
       position: relative;
+      width: 100%;
+      border-right: 1px solid #f0f0f0;
+      .fast-list {
+        .ant-tabs-nav {
+          width: 100% !important;
+        }
+      }
       .config {
         position: absolute;
         bottom: 0;
@@ -60,6 +68,12 @@ body {
           margin: 0 5px;
         }
       }
+    }
+    .menu-detail {
+      border-right: 1px solid #f0f0f0;
+      height: calc(100vh - 50px);
+      position: relative;
+      width: 100%;
     }
   }
 }

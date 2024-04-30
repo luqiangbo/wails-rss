@@ -1,4 +1,4 @@
-import { Button, Affix, Row, Col, Divider, message } from 'antd'
+import { Button, Affix, Row, Col, Tabs, message } from 'antd'
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { useSetState } from 'ahooks'
 
@@ -11,6 +11,24 @@ import { RssFeedAdd } from '../wailsjs/go/main/App'
 function App() {
   const [state, setState] = useSetState({
     isModalUpdate: false,
+    fastList: [
+      {
+        key: 0,
+        value: '所以列表',
+      },
+      {
+        key: 1,
+        value: '今日更新',
+      },
+      {
+        key: 2,
+        value: '收藏列表',
+      },
+      {
+        key: 3,
+        value: '未读列表',
+      },
+    ],
   })
   const [messageApi, contextHolder] = message.useMessage()
 
@@ -29,9 +47,22 @@ function App() {
 
       <main>
         <Row>
-          <Col span={6}>
+          <Col span={4}>
             <Affix offsetTop={50}>
               <div className='menu'>
+                <div className='fast-list'>
+                  <Tabs
+                    tabPosition='left'
+                    items={state.fastList.map((u) => {
+                      return {
+                        label: u.value,
+                        key: u.key,
+                        children: ``,
+                      }
+                    })}
+                  />
+                </div>
+
                 <div className='take'>
                   <div>订阅源</div>
                   <div>
@@ -46,14 +77,18 @@ function App() {
                     <Button icon={<SearchOutlined />} />
                   </div>
                 </div>
-                <Divider />
                 <div className='config'>
                   <Button type='primary'>Button</Button>
                 </div>
               </div>
             </Affix>
           </Col>
-          <Col span={18}>
+          <Col span={4}>
+            <Affix offsetTop={50}>
+              <div className='menu-detail'>123</div>
+            </Affix>
+          </Col>
+          <Col span={16}>
             <div className='intter'>1234</div>
           </Col>
         </Row>
