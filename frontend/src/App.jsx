@@ -1,16 +1,13 @@
-import { Button, Affix, Row, Col, Tabs, message } from 'antd'
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import { Button, Affix, Row, Col, Divider, message, Input, Tree } from 'antd'
+import { GithubOutlined, WechatOutlined, MailOutlined } from '@ant-design/icons'
 import { useSetState } from 'ahooks'
 
-import ModalUpdate from './components/modalUpdate'
+import MenuTree from './components/menuTree'
 import imgLogo from './assets/images/logo.png'
 import './styles/App.less'
 
-import { RssFeedAdd } from '../wailsjs/go/main/App'
-
 function App() {
   const [state, setState] = useSetState({
-    isModalUpdate: false,
     fastList: [
       {
         key: 0,
@@ -37,11 +34,20 @@ function App() {
       {contextHolder}
       <Affix offsetTop={0}>
         <header>
-          <div className='left'>
-            <img src={imgLogo} className='logo' />
-            ails-rss
-          </div>
-          <div className='right'></div>
+          <Row>
+            <Col span={4}>
+              <div className='header-1'>
+                <img src={imgLogo} className='logo' />
+                ails-rss
+              </div>
+            </Col>
+            <Col span={4}>
+              <div className='header-2'> 标题</div>
+            </Col>
+            <Col span={16}>
+              <div className='header-3'></div>
+            </Col>
+          </Row>
         </header>
       </Affix>
 
@@ -51,34 +57,18 @@ function App() {
             <Affix offsetTop={50}>
               <div className='menu'>
                 <div className='fast-list'>
-                  <Tabs
-                    tabPosition='left'
-                    items={state.fastList.map((u) => {
-                      return {
-                        label: u.value,
-                        key: u.key,
-                        children: ``,
-                      }
-                    })}
-                  />
+                  {state.fastList.map((u) => (
+                    <Button block key={u.key} size='large' className='my-1'>
+                      {u.value}
+                    </Button>
+                  ))}
                 </div>
-
-                <div className='take'>
-                  <div>订阅源</div>
-                  <div>
-                    <Button
-                      icon={<PlusOutlined />}
-                      onClick={() => {
-                        setState({
-                          isModalUpdate: true,
-                        })
-                      }}
-                    />
-                    <Button icon={<SearchOutlined />} />
-                  </div>
-                </div>
+                <Divider>订阅源</Divider>
+                <MenuTree />
                 <div className='config'>
-                  <Button type='primary'>Button</Button>
+                  <Button type='dashed' icon={<GithubOutlined />}></Button>
+                  <Button type='dashed' icon={<WechatOutlined />}></Button>
+                  <Button type='dashed' icon={<MailOutlined />}></Button>
                 </div>
               </div>
             </Affix>
@@ -93,25 +83,6 @@ function App() {
           </Col>
         </Row>
       </main>
-      {state.isModalUpdate && (
-        <ModalUpdate
-          onCancel={() => {
-            setState({
-              isModalUpdate: false,
-            })
-          }}
-          onOk={(url) => {
-            RssFeedAdd(url).then((res) => {
-              console.log({ res })
-              // message.info(res)
-            })
-
-            setState({
-              isModalUpdate: false,
-            })
-          }}
-        />
-      )}
     </div>
   )
 }

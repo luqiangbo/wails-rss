@@ -17,13 +17,12 @@ body {
 
 .rss-app {
   header {
-    display: flex;
     height: 50px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
     position: relative;
     z-index: 1000;
     background-color: #fff;
-    .left {
+    .header-1 {
       font-size: 30px;
       font-weight: 600 !important;
       display: flex;
@@ -35,6 +34,15 @@ body {
         height: auto;
         display: inline-block;
       }
+    }
+    .header-2 {
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      overflow: hidden;
+    }
+    .header-3 {
     }
   }
   main {
@@ -49,8 +57,11 @@ body {
       width: 100%;
       border-right: 1px solid #f0f0f0;
       .fast-list {
-        .ant-tabs-nav {
-          width: 100% !important;
+        .ant-segmented {
+          width: 100%;
+          .ant-segmented-group {
+            flex-direction: column !important;
+          }
         }
       }
       .config {
@@ -58,15 +69,21 @@ body {
         bottom: 0;
         left: 0;
         width: 100%;
+        display: flex;
+        justify-content: space-around;
       }
       .take {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 5px;
+        // border: 1px solid #f0f0f0;
+        margin: 0.25rem;
         button {
           margin: 0 5px;
         }
+      }
+      .menu-list {
       }
     }
     .menu-detail {

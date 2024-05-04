@@ -4,7 +4,11 @@ import { Modal, Input, message } from 'antd'
 
 export default function Index(props) {
   const [state, setState] = useSetState({
-    value: 'https://feeds.feedburner.com/ruanyifeng',
+    // value: 'https://www.ithome.com/rss/',
+    // value: 'https://rsshub.app/36kr/newsflashes',
+    // value: 'https://feeds.feedburner.com/ruanyifeng',
+    // value: 'https://feeds.feedburner.com/zhihu-daily',
+    value: 'https://www.zhihu.com/rss',
   })
   const [messageApi, contextHolder] = message.useMessage()
 

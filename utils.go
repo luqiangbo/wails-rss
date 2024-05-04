@@ -26,14 +26,19 @@ type RSSFeed struct {
 
 // RSSItem 是 RSS 订阅项的数据结构
 type RSSItem struct {
-	Title string `json:"title"`
-	Link  string `json:"link"`
+	Title       string `json:"title"`
+	Link        string `json:"link"`
+	Description string `json:"description"`
+	PubDate     string `json:"pub_date"`
 }
 
 // 解析订阅源
 func ParseRSSFeed(url string) (*RSSFeed, error) {
 	fp := gofeed.NewParser()
+	fp.UserAgent = "MyCustomAgent 1.0"
 	feed, err := fp.ParseURL(url)
+	// fmt.Println(feed)
+	// fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
@@ -42,9 +47,15 @@ func ParseRSSFeed(url string) (*RSSFeed, error) {
 	}
 
 	for _, item := range feed.Items {
+
+		pubDate := item.PublishedParsed
+		formattedPubDate := pubDate.Format("2006-01-02 15:04:05")
+
 		rssFeed.Items = append(rssFeed.Items, RSSItem{
-			Title: item.Title,
-			Link:  item.Link,
+			Title:       item.Title,
+			Link:        item.Link,
+			Description: item.Description,
+			PubDate:     formattedPubDate,
 		})
 	}
 
