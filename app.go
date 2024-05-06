@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"strings"
 )
 
 // App struct
@@ -26,10 +27,18 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-func (a *App) RssFeedAdd(name string) Response {
-	res, err := ParseRSSFeed(name)
-	if err != nil {
+func (a *App) RssFeedAdd(rssList string) Response {
+	var responses []*RSSFeed
+	list := strings.Split(rssList, ",")
+	for _, name := range list {
+		res, err := ParseRSSFeed(name)
+		if err == nil {
+			responses = append(responses, res)
+		}
+	}
+	if len(responses) == 0 {
 		return Result(1, nil, "error")
 	}
-	return Result(0, res, "success")
+
+	return Result(0, responses, "success")
 }

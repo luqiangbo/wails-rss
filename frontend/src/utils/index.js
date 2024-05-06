@@ -16,3 +16,13 @@ export function stringToColour(str) {
   }
   return colour
 }
+
+export function extractFirstNChars(html, n) {
+  const regex = />(.+?)</s // 单行模式
+  const match = html.match(regex)
+  if (match) {
+    const text = match[1]
+    return text.slice(0, n) + '...'
+  }
+  return ''
+}

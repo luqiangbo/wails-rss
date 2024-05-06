@@ -5,6 +5,7 @@ import { useSnapshot } from 'valtio'
 import { Scrollbars } from 'rc-scrollbars'
 
 import { stringToColour } from '../utils/index'
+import { getItem } from '../utils/storage'
 import { mCommon, mUser } from '../store'
 import { calc } from 'antd/es/theme/internal'
 
@@ -18,24 +19,25 @@ const App = () => {
   useEffect(() => {}, [])
 
   return (
-    <>
+    <div className='menu-list-children'>
       <Affix offsetTop={50}>
         <Scrollbars style={{ height: 'calc(100vh - 50px)' }}>
           <div className='menu-tree-detail'>
             {snapUser.menuListChildren.map((u) => (
               <div
                 className='menu-tree-detail-item'
-                key={u.link}
-                onClick={() => {
-                  const sole = mUser.descriptionObj[u.link]
-                  console.log({ sole })
+                key={u.id}
+                onClick={async () => {
+                  const sole = await getItem(u.id)
+                  console.log({ sole, u })
                   if (sole) {
                     window.scrollTo(0, 0)
-                    mCommon.htmlString = sole
+                    mCommon.htmlString = sole.description
                   }
                 }}
               >
                 <div className='title'>{u.title}</div>
+                <div className='intro'>{u.intro}</div>
                 <div className='bottom'>
                   <div className='left'>
                     <Avatar
@@ -55,7 +57,7 @@ const App = () => {
           </div>
         </Scrollbars>
       </Affix>
-    </>
+    </div>
   )
 }
 export default App

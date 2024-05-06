@@ -11,7 +11,6 @@ export const mUser = proxyWithPersist(
     ],
     menuListChildren: [],
     menuListTitle: '',
-    descriptionObj: {},
   },
   {
     key: 'mUser',

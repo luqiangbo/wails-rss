@@ -1,12 +1,20 @@
 import React, { useEffect } from 'react'
-import { Collapse, Input, Button, Dropdown, Avatar, Badge, Tooltip } from 'antd'
-import { EditOutlined, PlusOutlined, DeleteOutlined, RedoOutlined } from '@ant-design/icons'
+import { Collapse, Input, Button, Dropdown, Avatar, Badge, Affix, Divider, message } from 'antd'
+import {
+  EditOutlined,
+  PlusOutlined,
+  SettingOutlined,
+  GithubOutlined,
+  WechatOutlined,
+  MailOutlined,
+} from '@ant-design/icons'
 import { useSetState } from 'ahooks'
 import { useSnapshot } from 'valtio'
 
 import { mUser, mCommon } from '../store'
 import ModalUpdate from './modalUpdate'
-import { generateUUID, stringToColour } from '../utils/index'
+import { extractFirstNChars, stringToColour } from '../utils/index'
+import { setItem } from '../utils/storage'
 import { RssFeedAdd } from '../../wailsjs/go/main/App'
 
 const Panel = Collapse.Panel
@@ -16,6 +24,25 @@ const App = () => {
   const snapCommon = useSnapshot(mCommon)
   const [state, setState] = useSetState({
     isModalUpdate: false,
+    isShowSetting: false,
+    fastList: [
+      {
+        key: 0,
+        value: '所以列表',
+      },
+      {
+        key: 1,
+        value: '今日更新',
+      },
+      {
+        key: 2,
+        value: '收藏列表',
+      },
+      {
+        key: 3,
+        value: '未读列表',
+      },
+    ],
   })
 
   const itemsDropdown = [
@@ -29,13 +56,24 @@ const App = () => {
             })
           }}
         >
-          新增订阅源
+          新建订阅源
         </div>
       ),
     },
     {
       key: '2',
-      label: <div>新增文件夹</div>,
+      label: <div>新建文件夹</div>,
+    },
+  ]
+
+  const settingDropdown = [
+    {
+      key: '1',
+      label: <div onClick={() => {}}>编辑</div>,
+    },
+    {
+      key: '2',
+      label: <div>删除</div>,
     },
   ]
 
@@ -43,9 +81,8 @@ const App = () => {
 
   const onUpdateMenu = (type, data) => {
     const { menuList } = mUser
-
-    const { title, items } = data.res.data || {}
-
+    console.log(data.res)
+    const { title, items } = data.res.data || []
     if (type === 'add') {
       const sole = menuList.find((u) => u.key === '0')
       if (sole) {
@@ -54,17 +91,18 @@ const App = () => {
           console.log('已添加')
         } else {
           let list = []
-          let showHtml = {}
           items.map((u) => {
             list.push({
+              id: u.id,
               title: u.title,
               link: u.link,
               pub_date: u.pub_date,
               view: 0,
               collect: false,
               parent: title,
+              intro: extractFirstNChars(u.description, 50),
             })
-            mUser.descriptionObj[u.link] = u.description
+            setItem(u.id, u)
           })
 
           sole.children.push({
@@ -81,100 +119,130 @@ const App = () => {
       let list = []
       items.map((u) => {
         list.push({
+          id: u.id,
           title: u.title,
           link: u.link,
           pub_date: u.pub_date,
           view: 0,
           collect: false,
           parent: title,
+          intro: extractFirstNChars(u.description, 50),
         })
-        mUser.descriptionObj[u.link] = u.description
+        setItem(u.id, u)
       })
       mUser.menuListChildren = list
       mUser.menuListTitle = title
     }
   }
 
-  const fetchList = (type, url) => {
+  const fetchList = (type, rssList) => {
     mCommon.spinning = true
-    RssFeedAdd(url).then((res) => {
+    console.log({ type, rssList })
+    RssFeedAdd(rssList).then((res) => {
       mCommon.spinning = false
-      console.log({ res })
       if (res.code === 0) {
-        onUpdateMenu(type, { res, url })
+        onUpdateMenu(type, { res })
+      }
+      if (res.code === 1) {
+        message.warning('失败')
       }
     })
   }
 
   return (
-    <>
-      <div className='take'>
-        <div>
-          <Input placeholder='搜索' />
-        </div>
-        <div>
-          <Dropdown menu={{ items: itemsDropdown }} placement='bottom' trigger={['click']}>
-            <Button icon={<PlusOutlined />} />
-          </Dropdown>
-        </div>
-      </div>
-
-      <div className='menu-list'>
-        <Collapse defaultActiveKey={['1']} onChange={() => {}}>
-          {snapUser.menuList.map((u) => (
-            <Panel key={u.key} header={u.value} extra={<EditOutlined />}>
-              {u.children.map((h) => (
-                <dev className='menu-list-item' key={h.key}>
-                  <div
-                    className='menu-list-item-left'
-                    onClick={() => {
-                      fetchList('show', h.key)
-                    }}
-                  >
-                    <Badge count={1}>
-                      <Avatar
-                        style={{
-                          verticalAlign: 'middle',
-                          backgroundColor: stringToColour(h.value),
-                        }}
-                        size={30}
-                        gap={2}
-                      >
-                        {h.value[0]}
-                      </Avatar>
-                    </Badge>
-                    <div className='menu-list-item-left-value'>{h.value}</div>
-                  </div>
-                  <div className='menu-list-item-right'>
-                    <Tooltip title='更新'>
-                      <Button shape='circle' icon={<RedoOutlined />} />
-                    </Tooltip>
-                    <Tooltip title='删除'>
-                      <Button danger shape='circle' icon={<DeleteOutlined />} />
-                    </Tooltip>
-                  </div>
-                </dev>
-              ))}
-            </Panel>
+    <Affix offsetTop={50}>
+      <div className='menu'>
+        <div className='fast-list'>
+          {state.fastList.map((u) => (
+            <Button block key={u.key} size='middle' className='my-1'>
+              {u.value}
+            </Button>
           ))}
-        </Collapse>
+        </div>
+        <Divider>订阅源</Divider>
+        <div className='take'>
+          <div className='left'>
+            <Input placeholder='搜索' />
+          </div>
+          <div>
+            <Dropdown menu={{ items: itemsDropdown }} placement='bottom' trigger={['click']}>
+              <Button icon={<PlusOutlined />} />
+            </Dropdown>
+            <Button
+              type={state.isShowSetting ? 'primary' : 'default'}
+              icon={<SettingOutlined />}
+              onClick={() => {
+                setState({
+                  isShowSetting: !state.isShowSetting,
+                })
+              }}
+            />
+          </div>
+        </div>
+
+        <div className='menu-list'>
+          <Collapse defaultActiveKey={['0']} onChange={() => {}}>
+            {snapUser.menuList.map((u) => (
+              <Panel key={u.key} header={u.value} extra={state.isShowSetting ? <EditOutlined /> : ''}>
+                {u.children.map((h) => (
+                  <dev className='menu-list-item' key={h.key}>
+                    <div
+                      className='menu-list-item-left'
+                      onClick={() => {
+                        fetchList('show', h.key)
+                      }}
+                    >
+                      <Badge count={1} size='small'>
+                        <Avatar
+                          style={{
+                            verticalAlign: 'middle',
+                            backgroundColor: stringToColour(h.value),
+                          }}
+                          size={30}
+                          gap={2}
+                        >
+                          {h.value[0]}
+                        </Avatar>
+                      </Badge>
+                      <div className='menu-list-item-left-value'>{h.value}</div>
+                    </div>
+                    <div className='menu-list-item-right'>
+                      {state.isShowSetting ? (
+                        <Dropdown menu={{ items: settingDropdown }} placement='bottom' trigger={['click']}>
+                          <Button icon={<SettingOutlined />} type='text' />
+                        </Dropdown>
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                  </dev>
+                ))}
+              </Panel>
+            ))}
+          </Collapse>
+        </div>
+        {state.isModalUpdate && (
+          <ModalUpdate
+            onCancel={() => {
+              setState({
+                isModalUpdate: false,
+              })
+            }}
+            onOk={(url) => {
+              fetchList('add', url)
+              setState({
+                isModalUpdate: false,
+              })
+            }}
+          />
+        )}
+        <div className='config'>
+          <Button type='dashed' icon={<GithubOutlined />}></Button>
+          <Button type='dashed' icon={<WechatOutlined />}></Button>
+          <Button type='dashed' icon={<MailOutlined />}></Button>
+        </div>
       </div>
-      {state.isModalUpdate && (
-        <ModalUpdate
-          onCancel={() => {
-            setState({
-              isModalUpdate: false,
-            })
-          }}
-          onOk={(url) => {
-            fetchList('add', url)
-            setState({
-              isModalUpdate: false,
-            })
-          }}
-        />
-      )}
-    </>
+    </Affix>
   )
 }
 export default App

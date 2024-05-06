@@ -16,7 +16,10 @@ root.render(
     theme={{
       // 1. 单独使用暗色算法
       // algorithm: theme.darkAlgorithm,
-      algorithm: theme.defaultAlgorithm,
+      // algorithm: theme.defaultAlgorithm,
+      token: {
+        colorPrimary: '#262626',
+      },
     }}
   >
     <App />

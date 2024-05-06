@@ -1,3 +1,5 @@
+@colorPrimary: #262626;
+
 * {
   box-sizing: border-box;
 }
@@ -47,6 +49,12 @@ body {
     }
   }
   main {
+    .intter-no {
+      min-height: calc(100vh - 50px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
     .intter {
       min-height: calc(100vh - 50px);
       padding: 10px;
@@ -144,6 +152,7 @@ body {
       width: 100%;
       border-right: 1px solid #f0f0f0;
       .fast-list {
+        padding: 5px 10px;
         .ant-segmented {
           width: 100%;
           .ant-segmented-group {
@@ -166,10 +175,15 @@ body {
         padding: 5px;
         // border: 1px solid #f0f0f0;
         margin: 0.25rem;
+        .left {
+          flex: 1;
+          padding-right: 2px;
+        }
         button {
-          margin: 0 5px;
+          margin: 0 2px;
         }
       }
+
       .menu-list {
         .ant-collapse-content-box {
           padding: 10px 0;
@@ -180,8 +194,9 @@ body {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          border-bottom: 1px solid #f0f0f0;
           &:hover {
-            background-color: #1677ff;
+            background-color: @colorPrimary;
             color: #fff;
           }
           .menu-list-item-left {
@@ -189,16 +204,23 @@ body {
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            flex: 1;
             .menu-list-item-left-value {
               overflow: hidden;
+              max-height: 20px;
             }
           }
           .menu-list-item-right {
             display: flex;
             gap: 5px;
+            flex: 0 0 32px;
+            height: 32px;
           }
         }
       }
+    }
+    .menu-list-children {
+      border-right: 1px solid #f0f0f0;
     }
     .menu-tree-detail {
       border-right: 1px solid #f0f0f0;
@@ -218,13 +240,19 @@ body {
           -webkit-line-clamp: 2; /* 设置最多显示的行数 */
           -webkit-box-orient: vertical;
           overflow: hidden;
-          margin-bottom: 15px;
+          margin-bottom: 10px;
+        }
+        .intro {
+          font-size: 12px;
+          color: #aaa;
+          margin-bottom: 8px;
         }
         .bottom {
           display: flex;
           align-items: center;
           justify-content: space-between;
           font-size: 12px;
+          margin-bottom: 8px;
 
           .left {
           }

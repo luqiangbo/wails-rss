@@ -1,6 +1,9 @@
 package main
 
 import (
+	"crypto/sha256"
+	"fmt"
+
 	"github.com/mmcdole/gofeed"
 )
 
@@ -18,14 +21,29 @@ func Result(code int, data interface{}, msg string) Response {
 	}
 }
 
+func GetIdString(req string) string {
+	// 将输入字符串与盐值连接
+	data := []byte(req)
+
+	// 计算 SHA-256 哈希值
+	hash := sha256.Sum256(data)
+
+	// 将哈希值转换为十六进制字符串
+	hashStr := fmt.Sprintf("%x", hash)
+
+	return hashStr
+}
+
 // RSSFeed 是解析后的 RSS 数据结构
 type RSSFeed struct {
+	Id    string    `json:"id"`
 	Title string    `json:"title"`
 	Items []RSSItem `json:"items"`
 }
 
 // RSSItem 是 RSS 订阅项的数据结构
 type RSSItem struct {
+	Id          string `json:"id"`
 	Title       string `json:"title"`
 	Link        string `json:"link"`
 	Description string `json:"description"`
@@ -43,6 +61,7 @@ func ParseRSSFeed(url string) (*RSSFeed, error) {
 		return nil, err
 	}
 	rssFeed := &RSSFeed{
+		Id:    GetIdString(feed.Title),
 		Title: feed.Title,
 	}
 
@@ -52,6 +71,7 @@ func ParseRSSFeed(url string) (*RSSFeed, error) {
 		formattedPubDate := pubDate.Format("2006-01-02 15:04:05")
 
 		rssFeed.Items = append(rssFeed.Items, RSSItem{
+			Id:          GetIdString(item.Link),
 			Title:       item.Title,
 			Link:        item.Link,
 			Description: item.Description,

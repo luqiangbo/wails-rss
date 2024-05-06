@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { useSetState } from 'ahooks'
 import { Modal, Input, message } from 'antd'
 
+const { TextArea } = Input
+
 export default function Index(props) {
   const [state, setState] = useSetState({
     // value: 'https://www.ithome.com/rss/',
@@ -21,7 +23,7 @@ export default function Index(props) {
       {contextHolder}
       <Modal
         animation={true}
-        title='添加订阅源'
+        title='新建订阅源'
         open={true}
         maskClosable={false}
         width={550}
@@ -37,7 +39,9 @@ export default function Index(props) {
           props.onOk(state.value)
         }}
       >
-        <Input
+        <TextArea
+          placeholder='请输入订阅源地址, 支持RSS/ATOM/JSON/RDF'
+          rows={4}
           value={state.value}
           onChange={(e) => {
             setState({
