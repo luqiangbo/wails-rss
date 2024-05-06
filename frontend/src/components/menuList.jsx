@@ -79,69 +79,53 @@ const App = () => {
 
   useEffect(() => {}, [])
 
-  const onUpdateMenu = (type, data) => {
-    const { menuList } = mUser
+  const onUpdateMenu = (data) => {
+    const { folderList } = mUser
     console.log(data.res)
-    const { title, items } = data.res.data || []
-    if (type === 'add') {
-      const sole = menuList.find((u) => u.key === '0')
-      if (sole) {
-        const soleChildren = sole.children.find((u) => u.key === data.url)
-        if (soleChildren) {
-          console.log('已添加')
-        } else {
-          let list = []
-          items.map((u) => {
-            list.push({
-              id: u.id,
-              title: u.title,
-              link: u.link,
-              pub_date: u.pub_date,
-              view: 0,
-              collect: false,
-              parent: title,
-              intro: extractFirstNChars(u.description, 50),
-            })
-            setItem(u.id, u)
-          })
-
-          sole.children.push({
-            key: data.url,
-            value: title,
-            children: list,
-          })
-          mUser.menuListChildren = list
-          mUser.menuListTitle = title
-        }
+    const rssList = data.res.data || []
+    rssList.forEach((u) => {
+      let folderSole = folderList.find((h) => h.childrenObj[u.id])
+      if (!folderSole) {
+        folderSole = folderList.find((h) => h.key === '0')
       }
-    }
-    if (type === 'show') {
+      console.log({ folderSole })
       let list = []
-      items.map((u) => {
+      u.items.map((d) => {
         list.push({
-          id: u.id,
-          title: u.title,
-          link: u.link,
-          pub_date: u.pub_date,
+          id: d.id,
+          title: d.title,
+          link: d.link,
+          pub_date: d.pub_date,
           view: 0,
           collect: false,
-          parent: title,
-          intro: extractFirstNChars(u.description, 50),
+          parent: {
+            id: u.id,
+            link: u.link,
+            title: u.title,
+          },
+          intro: extractFirstNChars(d.description, 50),
         })
-        setItem(u.id, u)
+        setItem(d.id, d)
       })
+
+      folderSole.childrenObj[u.id] = {
+        id: u.id,
+        title: u.title,
+        link: u.link,
+        children: list,
+      }
       mUser.menuListChildren = list
-      mUser.menuListTitle = title
-    }
+      mUser.menuListTitle = u.title
+    })
   }
 
-  const fetchList = (type, rssList) => {
+  const fetchList = (rssList) => {
     mCommon.spinning = true
-    console.log({ type, rssList })
+    console.log({ rssList })
     RssFeedAdd(rssList).then((res) => {
       mCommon.spinning = false
       if (res.code === 0) {
-        onUpdateMenu(type, { res })
+        onUpdateMenu({ res })
       }
       if (res.code === 1) {
         message.warning('失败')
@@ -182,29 +166,29 @@ const App = () => {
 
         <div className='menu-list'>
           <Collapse defaultActiveKey={['0']} onChange={() => {}}>
-            {snapUser.menuList.map((u) => (
+            {snapUser.folderList.map((u) => (
               <Panel key={u.key} header={u.value} extra={state.isShowSetting ? <EditOutlined /> : ''}>
-                {u.children.map((h) => (
-                  <dev className='menu-list-item' key={h.key}>
+                {Object.entries(u.childrenObj).map(([key, value]) => (
+                  <dev className='menu-list-item' key={key}>
                     <div
                       className='menu-list-item-left'
                       onClick={() => {
-                        fetchList('show', h.key)
+                        fetchList(value.link)
                       }}
                     >
                       <Badge count={1} size='small'>
                         <Avatar
                           style={{
                             verticalAlign: 'middle',
-                            backgroundColor: stringToColour(h.value),
+                            backgroundColor: stringToColour(value.id),
                           }}
                           size={30}
                           gap={2}
                         >
-                          {h.value[0]}
+                          {value.title[0]}
                         </Avatar>
                       </Badge>
-                      <div className='menu-list-item-left-value'>{h.value}</div>
+                      <div className='menu-list-item-left-value'>{value.title}</div>
                     </div>
                     <div className='menu-list-item-right'>
                       {state.isShowSetting ? (
@@ -229,7 +213,7 @@ const App = () => {
               })
             }}
             onOk={(url) => {
-              fetchList('add', url)
+              fetchList(url)
               setState({
                 isModalUpdate: false,
               })

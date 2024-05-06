@@ -10,7 +10,7 @@ export default function Index(props) {
     // value: 'https://rsshub.app/36kr/newsflashes',
     // value: 'https://feeds.feedburner.com/ruanyifeng',
     // value: 'https://feeds.feedburner.com/zhihu-daily',
-    value: 'https://www.zhihu.com/rss',
+    value: 'https://www.zhihu.com/rss,https://www.ithome.com/rss/',
   })
   const [messageApi, contextHolder] = message.useMessage()
 

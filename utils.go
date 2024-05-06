@@ -38,6 +38,7 @@ func GetIdString(req string) string {
 type RSSFeed struct {
 	Id    string    `json:"id"`
 	Title string    `json:"title"`
+	Link  string    `json:"link"`
 	Items []RSSItem `json:"items"`
 }
 
@@ -63,6 +64,7 @@ func ParseRSSFeed(url string) (*RSSFeed, error) {
 	rssFeed := &RSSFeed{
 		Id:    GetIdString(feed.Title),
 		Title: feed.Title,
+		Link:  url,
 	}
 
 	for _, item := range feed.Items {

@@ -2,11 +2,11 @@ import { proxyWithPersist } from './index'
 
 export const mUser = proxyWithPersist(
   {
-    menuList: [
+    folderList: [
       {
         key: '0',
         value: '默认',
-        children: [],
+        childrenObj: {},
       },
     ],
     menuListChildren: [],

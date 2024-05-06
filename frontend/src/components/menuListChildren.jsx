@@ -43,11 +43,11 @@ const App = () => {
                     <Avatar
                       style={{
                         verticalAlign: 'middle',
-                        backgroundColor: stringToColour(u.parent),
+                        backgroundColor: stringToColour(u.parent.id),
                       }}
                       size={25}
                     >
-                      {u.parent[0]}
+                      {u.parent.title[0]}
                     </Avatar>
                   </div>
                   <div className='right'>{u.pub_date}</div>
