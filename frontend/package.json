@@ -13,6 +13,7 @@
     "@rollup/rollup-win32-x64-msvc": "^4.17.0",
     "ahooks": "^3.7.11",
     "antd": "^5.16.5",
+    "leancloud-storage": "^4.15.2",
     "localforage": "^1.10.0",
     "rc-scrollbars": "^1.1.6",
     "react": "^18.2.0",

@@ -3,6 +3,7 @@ import { Affix, Row, Col } from 'antd'
 import { useSetState } from 'ahooks'
 import { useSnapshot } from 'valtio'
 
+import CHeadersRight from './headersRight'
 import imgLogo from '../assets/images/logo.png'
 
 import { mUser } from '../store'
@@ -28,7 +29,7 @@ const App = () => {
               <div className='header-2'>{snapUser.menuListTitle} </div>
             </Col>
             <Col span={16}>
-              <div className='header-3'></div>
+              <CHeadersRight />
             </Col>
           </Row>
         </header>
