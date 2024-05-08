@@ -103,6 +103,7 @@ const App = () => {
             link: u.link,
             title: u.title,
           },
+          folder: folderSole.key,
           intro: extractFirstNChars(d.description, 50),
         })
         setItem(d.id, d)
@@ -165,7 +166,7 @@ const App = () => {
         </div>
 
         <div className='menu-list'>
-          <Collapse defaultActiveKey={['0']} onChange={() => {}}>
+          <Collapse defaultActiveKey={['0']}>
             {snapUser.folderList.map((u) => (
               <Panel key={u.key} header={u.value} extra={state.isShowSetting ? <EditOutlined /> : ''}>
                 {Object.entries(u.childrenObj).map(([key, value]) => (
@@ -173,7 +174,9 @@ const App = () => {
                     <div
                       className='menu-list-item-left'
                       onClick={() => {
-                        fetchList(value.link)
+                        mUser.menuListChildren = value.children
+                        mUser.activeFolder = u.key
+                        mUser.activeRss = key
                       }}
                     >
                       <Badge count={1} size='small'>

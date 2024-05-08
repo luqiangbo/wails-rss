@@ -9,8 +9,24 @@ export const mUser = proxyWithPersist(
         childrenObj: {},
       },
     ],
+    activeFolder: '',
+    activeRss: '',
     menuListChildren: [],
     menuListTitle: '',
+    onRssTitle: () => {
+      let res = ''
+      const sole = mUser.folderList.find((u) => u.key === activeFolder)
+      if (sole) {
+        const soleRss = sole.childrenObj[activeRss]
+        if (soleRss) {
+          res = soleRss.title
+        }
+      }
+      return res
+    },
+    onMenuListChildren() {
+      mUser
+    },
   },
   {
     key: 'mUser',

@@ -27,8 +27,8 @@ const App = () => {
 
   return (
     <div className='header-3'>
-      <Button onClick={onAdd}>onAdd</Button>
-      <Button onClick={onEqual}>onEqual</Button>
+      {/* <Button onClick={onAdd}>onAdd</Button>
+      <Button onClick={onEqual}>onEqual</Button> */}
     </div>
   )
 }
