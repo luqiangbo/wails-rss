@@ -5,13 +5,12 @@ import { useSnapshot } from 'valtio'
 
 import CHeadersRight from './headersRight'
 import imgLogo from '../assets/images/logo.png'
-
-import { mUser } from '../store'
+import { mUser, mUserActions } from '../store'
+import _ from '../utils/lodash'
 
 const App = () => {
   const snapUser = useSnapshot(mUser)
   const [state, setState] = useSetState({})
-
   useEffect(() => {}, [])
 
   return (
@@ -26,7 +25,7 @@ const App = () => {
               </div>
             </Col>
             <Col span={4}>
-              <div className='header-2'>{snapUser.menuListTitle} </div>
+              <div className='header-2'>{_.get(mUserActions.onRssActive(), 'title', '')} </div>
             </Col>
             <Col span={16}>
               <CHeadersRight />

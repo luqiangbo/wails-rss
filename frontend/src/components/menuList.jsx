@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Collapse, Input, Button, Dropdown, Avatar, Badge, Affix, Divider, message } from 'antd'
+import { Collapse, Input, Button, Dropdown, Avatar, Badge, Affix, Divider, message, Tag } from 'antd'
 import {
   EditOutlined,
   PlusOutlined,
@@ -7,14 +7,16 @@ import {
   GithubOutlined,
   WechatOutlined,
   MailOutlined,
+  RedoOutlined,
 } from '@ant-design/icons'
 import { useSetState } from 'ahooks'
 import { useSnapshot } from 'valtio'
+import { Scrollbars } from 'rc-scrollbars'
 
-import { mUser, mCommon } from '../store'
+import { mUser, mCommon, mUserActions } from '../store'
 import ModalUpdate from './modalUpdate'
+import { dbSetItem } from '../utils/storage'
 import { extractFirstNChars, stringToColour } from '../utils/index'
-import { setItem } from '../utils/storage'
 import { RssFeedAdd } from '../../wailsjs/go/main/App'
 
 const Panel = Collapse.Panel
@@ -96,8 +98,6 @@ const App = () => {
           title: d.title,
           link: d.link,
           pub_date: d.pub_date,
-          view: 0,
-          collect: false,
           parent: {
             id: u.id,
             link: u.link,
@@ -106,7 +106,7 @@ const App = () => {
           folder: folderSole.key,
           intro: extractFirstNChars(d.description, 50),
         })
-        setItem(d.id, d)
+        dbSetItem(d.id, d)
       })
 
       folderSole.childrenObj[u.id] = {
@@ -115,14 +115,11 @@ const App = () => {
         link: u.link,
         children: list,
       }
-      mUser.menuListChildren = list
-      mUser.menuListTitle = u.title
     })
   }
 
   const fetchList = (rssList) => {
     mCommon.spinning = true
-    console.log({ rssList })
     RssFeedAdd(rssList).then((res) => {
       mCommon.spinning = false
       if (res.code === 0) {
@@ -134,12 +131,23 @@ const App = () => {
     })
   }
 
+  const onUpdateAll = () => {
+    let list = []
+    mUser.folderList.forEach((u) => {
+      Object.entries(u.childrenObj).map(([key, value]) => {
+        list.push(value.link)
+      })
+    })
+    const rssListString = list.join(',')
+    fetchList(rssListString)
+  }
+
   return (
     <Affix offsetTop={50}>
       <div className='menu'>
         <div className='fast-list'>
           {state.fastList.map((u) => (
-            <Button block key={u.key} size='middle' className='my-1'>
+            <Button block key={u.key} size='middle' className='my-1' type='text'>
               {u.value}
             </Button>
           ))}
@@ -162,24 +170,23 @@ const App = () => {
                 })
               }}
             />
+            <Button icon={<RedoOutlined />} onClick={onUpdateAll} />
           </div>
         </div>
-
-        <div className='menu-list'>
-          <Collapse defaultActiveKey={['0']}>
-            {snapUser.folderList.map((u) => (
-              <Panel key={u.key} header={u.value} extra={state.isShowSetting ? <EditOutlined /> : ''}>
-                {Object.entries(u.childrenObj).map(([key, value]) => (
-                  <dev className='menu-list-item' key={key}>
-                    <div
-                      className='menu-list-item-left'
-                      onClick={() => {
-                        mUser.menuListChildren = value.children
-                        mUser.activeFolder = u.key
-                        mUser.activeRss = key
-                      }}
-                    >
-                      <Badge count={1} size='small'>
+        <Scrollbars style={{ height: '100%' }}>
+          <div className='menu-list'>
+            <Collapse defaultActiveKey={['0']} bordered={false}>
+              {snapUser.folderList.map((u) => (
+                <Panel key={u.key} header={u.value} extra={state.isShowSetting ? <EditOutlined /> : ''}>
+                  {Object.entries(u.childrenObj).map(([key, value]) => (
+                    <dev className='menu-list-item' key={key}>
+                      <div
+                        className='menu-list-item-left'
+                        onClick={() => {
+                          mUser.activeFolder = u.key
+                          mUser.activeRss = key
+                        }}
+                      >
                         <Avatar
                           style={{
                             verticalAlign: 'middle',
@@ -190,24 +197,29 @@ const App = () => {
                         >
                           {value.title[0]}
                         </Avatar>
-                      </Badge>
-                      <div className='menu-list-item-left-value'>{value.title}</div>
-                    </div>
-                    <div className='menu-list-item-right'>
-                      {state.isShowSetting ? (
-                        <Dropdown menu={{ items: settingDropdown }} placement='bottom' trigger={['click']}>
-                          <Button icon={<SettingOutlined />} type='text' />
-                        </Dropdown>
-                      ) : (
-                        ''
-                      )}
-                    </div>
-                  </dev>
-                ))}
-              </Panel>
-            ))}
-          </Collapse>
-        </div>
+                        <div className='menu-list-item-left-value'>{value.title}</div>
+                      </div>
+                      <div className='menu-list-item-right'>
+                        {state.isShowSetting ? (
+                          <Dropdown menu={{ items: settingDropdown }} placement='bottom' trigger={['click']}>
+                            <Button icon={<SettingOutlined />} type='text' />
+                          </Dropdown>
+                        ) : (
+                          <div>
+                            <Tag color='volcano' bordered={false}>
+                              {mUserActions.onViewLength(u.key, key)}
+                            </Tag>
+                          </div>
+                        )}
+                      </div>
+                    </dev>
+                  ))}
+                </Panel>
+              ))}
+            </Collapse>
+          </div>
+        </Scrollbars>
+
         {state.isModalUpdate && (
           <ModalUpdate
             onCancel={() => {
@@ -224,9 +236,9 @@ const App = () => {
           />
         )}
         <div className='config'>
-          <Button type='dashed' icon={<GithubOutlined />}></Button>
-          <Button type='dashed' icon={<WechatOutlined />}></Button>
-          <Button type='dashed' icon={<MailOutlined />}></Button>
+          <Button type='text' icon={<GithubOutlined />}></Button>
+          <Button type='text' icon={<WechatOutlined />}></Button>
+          <Button type='text' icon={<MailOutlined />}></Button>
         </div>
       </div>
     </Affix>

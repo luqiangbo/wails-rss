@@ -1,8 +1,7 @@
 import { proxy, subscribe, snapshot } from 'valtio'
 import { devtools } from 'valtio/utils'
-import { getItem, setItem } from '../utils/storage'
 
-import { mUser } from './user'
+import { mUser, mUserActions } from './user'
 import { mCommon } from './common'
 
 const mState = proxy({ mUser, mCommon })
@@ -21,4 +20,4 @@ export function proxyWithPersist(val, opts) {
   return state
 }
 
-export { mState, mUser, mCommon }
+export { mState, mUser, mCommon, mUserActions }

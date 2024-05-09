@@ -7,9 +7,9 @@ const storageInstance = localForage.createInstance({
   storeName: 'myStore', // 设置对象存储名称
 })
 
-export const getItem = (key) => storageInstance.getItem(key)
-export const setItem = (key, value) => storageInstance.setItem(key, value)
-export const removeItem = (key) => storageInstance.removeItem(key)
-export const clear = () => storageInstance.clear()
-export const length = () => storageInstance.length()
-export const iterate = (iteratorCallback) => storageInstance.iterate(iteratorCallback)
+export const dbGetItem = (key) => storageInstance.getItem(key)
+export const dbSetItem = (key, value) => storageInstance.setItem(key, value)
+export const dbRemoveItem = (key) => storageInstance.removeItem(key)
+export const dbClear = () => storageInstance.clear()
+export const dbLength = () => storageInstance.length()
+export const dbIterate = (iteratorCallback) => storageInstance.iterate(iteratorCallback)

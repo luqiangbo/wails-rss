@@ -12,12 +12,13 @@
     "@ant-design/icons": "^5.3.6",
     "@rollup/rollup-win32-x64-msvc": "^4.17.0",
     "ahooks": "^3.7.11",
-    "antd": "^5.16.5",
+    "antd": "^5.17.0",
     "leancloud-storage": "^4.15.2",
     "localforage": "^1.10.0",
+    "lodash-es": "^4.17.21",
     "rc-scrollbars": "^1.1.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "valtio": "^1.13.0"
   },
   "devDependencies": {
