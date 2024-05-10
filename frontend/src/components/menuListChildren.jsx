@@ -25,13 +25,12 @@ const App = () => {
         <Scrollbars style={{ height: 'calc(100vh - 50px)' }}>
           <div className='menu-tree-detail'>
             {_.get(mUserActions.onRssActive(), 'children', []).map((u) => (
-              <Badge dot={u.view === 0} key={u.id}>
+              <Badge dot={_.get(snapUser.viewObj, u.id, 0) === 0} key={u.id}>
                 <div
                   className='menu-tree-detail-item'
                   key={u.id}
                   onClick={async () => {
                     mUser.viewObj[u.id] = _.get(mUser.viewObj, u.id, 0) + 1
-                    soleId.view = u.view + 1
                     const sole = await dbGetItem(u.id)
                     if (sole) {
                       window.scrollTo(0, 0)

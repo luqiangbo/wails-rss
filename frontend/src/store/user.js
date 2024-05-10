@@ -1,4 +1,5 @@
 import { proxyWithPersist } from './index'
+import dayjs from 'dayjs'
 
 export const mUser = proxyWithPersist(
   {
@@ -45,6 +46,44 @@ export const mUserActions = {
   onViewLength: (folderKey, rssId) => {
     const sole = mUser.folderList.find((u) => u.key === folderKey)
     const soleRss = sole.childrenObj[rssId]
-    return soleRss.children.filter(({ view }) => view === 0).length
+    const list = soleRss.children.filter(({ id }) => !mUser.viewObj[id])
+    return list.length
+  },
+  onViewTypeLength: (type) => {
+    let res = 0
+    if (type === 0) {
+      mUser.folderList.forEach((u) => {
+        Object.entries(u.childrenObj).forEach(([key, value]) => {
+          res = res + value.children.length
+        })
+      })
+    }
+    if (type === 1) {
+      mUser.folderList.forEach((u) => {
+        Object.entries(u.childrenObj).forEach(([key, value]) => {
+          value.children.forEach((h) => {
+            const givenTime = dayjs(h.pub_date)
+            const today = dayjs().startOf('day')
+            const isSameDay = givenTime.isSame(today, 'day')
+            if (isSameDay) {
+              res = res + 1
+            }
+          })
+        })
+      })
+    }
+    if (type === 2) {
+      res = mUser.collectList.length
+    }
+    if (type === 3) {
+      let good = 0
+      mUser.folderList.forEach((u) => {
+        Object.entries(u.childrenObj).forEach(([key, value]) => {
+          good = good + value.children.length
+        })
+      })
+      res = good - Object.keys(mUser.viewObj).length
+    }
+    return res
   },
 }

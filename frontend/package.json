@@ -13,6 +13,7 @@
     "@rollup/rollup-win32-x64-msvc": "^4.17.0",
     "ahooks": "^3.7.11",
     "antd": "^5.17.0",
+    "dayjs": "^1.11.11",
     "leancloud-storage": "^4.15.2",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",

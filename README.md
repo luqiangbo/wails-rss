@@ -2,13 +2,13 @@
 
 ## dev
 
-```
+```bash
 wails dev
 ```
 
 ## build
 
-```
+```bash
 wails build
 
 wails build -platform=darwin/amd64

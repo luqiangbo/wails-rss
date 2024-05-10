@@ -147,8 +147,11 @@ const App = () => {
       <div className='menu'>
         <div className='fast-list'>
           {state.fastList.map((u) => (
-            <Button block key={u.key} size='middle' className='my-1' type='text'>
-              {u.value}
+            <Button block key={u.key} size='middle' className='my-1 flex justify-between' type='text'>
+              <div>{u.value}</div>
+              <Tag color='volcano' bordered={false}>
+                {mUserActions.onViewTypeLength(u.key)}
+              </Tag>
             </Button>
           ))}
         </div>
