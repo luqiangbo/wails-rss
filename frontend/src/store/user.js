@@ -1,5 +1,5 @@
 import { proxyWithPersist } from './index'
-import dayjs from 'dayjs'
+import { isSameDay } from '../utils/index'
 
 export const mUser = proxyWithPersist(
   {
@@ -12,6 +12,8 @@ export const mUser = proxyWithPersist(
     ],
     activeFolder: '',
     activeRss: '',
+    activeFast: -1,
+    activeTitle: '',
     viewObj: {}, // 观看
     collectList: [], // 收藏
   },
@@ -21,22 +23,67 @@ export const mUser = proxyWithPersist(
 )
 
 export const mUserActions = {
-  onRssActive: (type) => {
-    let res = {}
-    if (type === 'all') {
-      // 所以列表
-    } else if (type === 'day') {
+  onRssActive: () => {
+    let res = []
+    console.log('onRssActive', { activeFast: mUser.activeFast })
+    if (mUser.activeFast === 0) {
+      // 所有列表
+      let title = '所有列表'
+      let children = []
+      mUser.folderList.forEach((u) => {
+        Object.entries(u.childrenObj).forEach(([key, value]) => {
+          children = [...children, ...value.children]
+        })
+      })
+      res = children
+    } else if (mUser.activeFast === 1) {
       // 今日更新
-    } else if (type === 'collect') {
+      let title = '今日更新'
+      let children = []
+      mUser.folderList.forEach((u) => {
+        Object.entries(u.childrenObj).forEach(([key, value]) => {
+          value.children.forEach((h) => {
+            if (isSameDay(h.pub_date)) {
+              children.push(h)
+            }
+          })
+        })
+      })
+      res = children
+    } else if (mUser.activeFast === 2) {
       // 收藏列表
-    } else if (type === 'view') {
+      let title = '收藏列表'
+      let children = []
+      mUser.folderList.forEach((u) => {
+        Object.entries(u.childrenObj).forEach(([key, value]) => {
+          value.children.forEach((h) => {
+            if (mUser.collectList.includes(h.id)) {
+              children.push(h)
+            }
+          })
+        })
+      })
+      res = children
+    } else if (mUser.activeFast === 3) {
       // 未读列表
+      let title = '未读列表'
+      let children = []
+      mUser.folderList.forEach((u) => {
+        Object.entries(u.childrenObj).forEach(([key, value]) => {
+          value.children.forEach((h) => {
+            if (!mUser.viewObj[h.id]) {
+              children.push(h)
+            }
+          })
+        })
+      })
+      res = children
     } else {
       const sole = mUser.folderList.find((u) => u.key === mUser.activeFolder)
       if (sole) {
         const soleRss = sole.childrenObj[mUser.activeRss]
         if (soleRss) {
-          res = soleRss
+          res = soleRss.children
         }
       }
     }
@@ -62,10 +109,7 @@ export const mUserActions = {
       mUser.folderList.forEach((u) => {
         Object.entries(u.childrenObj).forEach(([key, value]) => {
           value.children.forEach((h) => {
-            const givenTime = dayjs(h.pub_date)
-            const today = dayjs().startOf('day')
-            const isSameDay = givenTime.isSame(today, 'day')
-            if (isSameDay) {
+            if (isSameDay(h.pub_date)) {
               res = res + 1
             }
           })

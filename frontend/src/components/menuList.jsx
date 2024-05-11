@@ -30,7 +30,7 @@ const App = () => {
     fastList: [
       {
         key: 0,
-        value: '所以列表',
+        value: '所有列表',
       },
       {
         key: 1,
@@ -147,7 +147,17 @@ const App = () => {
       <div className='menu'>
         <div className='fast-list'>
           {state.fastList.map((u) => (
-            <Button block key={u.key} size='middle' className='my-1 flex justify-between' type='text'>
+            <Button
+              block
+              key={u.key}
+              size='middle'
+              className='my-1 flex justify-between'
+              type={snapUser.activeFast === u.key ? '' : 'text'}
+              onClick={() => {
+                mUser.activeTitle = u.value
+                mUser.activeFast = u.key
+              }}
+            >
               <div>{u.value}</div>
               <Tag color='volcano' bordered={false}>
                 {mUserActions.onViewTypeLength(u.key)}
@@ -186,6 +196,8 @@ const App = () => {
                       <div
                         className='menu-list-item-left'
                         onClick={() => {
+                          mUser.activeFast = -1
+                          mUser.activeTitle = value.title
                           mUser.activeFolder = u.key
                           mUser.activeRss = key
                         }}

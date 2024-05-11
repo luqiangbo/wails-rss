@@ -25,7 +25,7 @@ const App = () => {
               </div>
             </Col>
             <Col span={4}>
-              <div className='header-2'>{_.get(mUserActions.onRssActive(), 'title', '')} </div>
+              <div className='header-2'>{snapUser.activeTitle} </div>
             </Col>
             <Col span={16}>
               <CHeadersRight />
