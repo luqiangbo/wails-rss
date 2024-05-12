@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Collapse, Input, Button, Dropdown, Avatar, Badge, Affix, Divider, message, Tag } from 'antd'
+import { Collapse, Input, Button, Dropdown, Avatar, Affix, Divider, message, Tag } from 'antd'
 import {
   EditOutlined,
   PlusOutlined,
@@ -15,6 +15,7 @@ import { Scrollbars } from 'rc-scrollbars'
 
 import { mUser, mCommon, mUserActions } from '../store'
 import ModalUpdate from './modalUpdate'
+import ModalFolder from './modalFolder'
 import { dbSetItem } from '../utils/storage'
 import { extractFirstNChars, stringToColour } from '../utils/index'
 import { RssFeedAdd } from '../../wailsjs/go/main/App'
@@ -27,6 +28,7 @@ const App = () => {
   const [state, setState] = useSetState({
     isModalUpdate: false,
     isShowSetting: false,
+    isModalFolder: false,
     fastList: [
       {
         key: 0,
@@ -64,7 +66,16 @@ const App = () => {
     },
     {
       key: '2',
-      label: <div>新建文件夹</div>,
+      label: (
+        <div
+          onClick={() => {
+            setState({ isModalFolder: true })
+            mCommon.modalFolderType = 'add'
+          }}
+        >
+          新建文件夹
+        </div>
+      ),
     },
   ]
 
@@ -190,7 +201,24 @@ const App = () => {
           <div className='menu-list'>
             <Collapse defaultActiveKey={['0']} bordered={false}>
               {snapUser.folderList.map((u) => (
-                <Panel key={u.key} header={u.value} extra={state.isShowSetting ? <EditOutlined /> : ''}>
+                <Panel
+                  key={u.key}
+                  header={u.value}
+                  extra={
+                    state.isShowSetting ? (
+                      <EditOutlined
+                        onClick={() => {
+                          setState({ isModalFolder: true })
+                          mCommon.modalFolderType = 'edit'
+                          mCommon.modalFolderKey = u.key
+                          mCommon.modalFolderValue = u.value
+                        }}
+                      />
+                    ) : (
+                      ''
+                    )
+                  }
+                >
                   {Object.entries(u.childrenObj).map(([key, value]) => (
                     <dev className='menu-list-item' key={key}>
                       <div
@@ -234,7 +262,11 @@ const App = () => {
             </Collapse>
           </div>
         </Scrollbars>
-
+        <div className='config'>
+          <Button type='text' icon={<GithubOutlined />}></Button>
+          <Button type='text' icon={<WechatOutlined />}></Button>
+          <Button type='text' icon={<MailOutlined />}></Button>
+        </div>
         {state.isModalUpdate && (
           <ModalUpdate
             onCancel={() => {
@@ -250,11 +282,22 @@ const App = () => {
             }}
           />
         )}
-        <div className='config'>
-          <Button type='text' icon={<GithubOutlined />}></Button>
-          <Button type='text' icon={<WechatOutlined />}></Button>
-          <Button type='text' icon={<MailOutlined />}></Button>
-        </div>
+
+        {state.isModalFolder && (
+          <ModalFolder
+            onCancel={() => {
+              setState({
+                isModalFolder: false,
+              })
+            }}
+            onOk={(url) => {
+              fetchList(url)
+              setState({
+                isModalFolder: false,
+              })
+            }}
+          />
+        )}
       </div>
     </Affix>
   )

@@ -2,8 +2,6 @@ import React, { useEffect } from 'react'
 import { useSetState } from 'ahooks'
 import { useSnapshot } from 'valtio'
 import { Rate } from 'antd'
-import algoliasearch from 'algoliasearch/lite'
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom'
 
 import { mUser, mCommon } from '../store'
 
@@ -11,7 +9,6 @@ const App = () => {
   const snapUser = useSnapshot(mUser)
   const snapCommon = useSnapshot(mCommon)
   const [state, setState] = useSetState({})
-  const searchClient = algoliasearch('YOUR_APP_ID', 'YOUR_SEARCH_API_KEY')
   useEffect(() => {}, [])
 
   return (
@@ -31,14 +28,7 @@ const App = () => {
           />
         ) : null}
       </div>
-      <div>
-        <InstantSearch indexName='demo_ecommerce' searchClient={searchClient}>
-          <div className='right-panel'>
-            <SearchBox />
-            <Hits hitComponent={Hit} />
-          </div>
-        </InstantSearch>
-      </div>
+      <div></div>
     </div>
   )
 }
