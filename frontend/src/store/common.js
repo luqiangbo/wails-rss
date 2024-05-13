@@ -7,4 +7,6 @@ export const mCommon = proxy({
   modalFolderType: 'add',
   modalFolderKey: '',
   modalFolderValue: '',
+  dropdownRssId: '',
+  dropdownFolderId: '',
 })

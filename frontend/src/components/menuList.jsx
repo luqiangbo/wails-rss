@@ -16,8 +16,10 @@ import { Scrollbars } from 'rc-scrollbars'
 import { mUser, mCommon, mUserActions } from '../store'
 import ModalUpdate from './modalUpdate'
 import ModalFolder from './modalFolder'
+import ModalRss from './modalRss'
 import { dbSetItem } from '../utils/storage'
 import { extractFirstNChars, stringToColour } from '../utils/index'
+import _ from '../utils/lodash'
 import { RssFeedAdd } from '../../wailsjs/go/main/App'
 
 const Panel = Collapse.Panel
@@ -29,6 +31,7 @@ const App = () => {
     isModalUpdate: false,
     isShowSetting: false,
     isModalFolder: false,
+    isModalRss: false,
     fastList: [
       {
         key: 0,
@@ -82,11 +85,37 @@ const App = () => {
   const settingDropdown = [
     {
       key: '1',
-      label: <div onClick={() => {}}>编辑</div>,
+      label: (
+        <div
+          onClick={() => {
+            setState({
+              isModalRss: true,
+            })
+          }}
+        >
+          编辑
+        </div>
+      ),
     },
     {
       key: '2',
-      label: <div>删除</div>,
+      label: (
+        <div
+          onClick={() => {
+            const { dropdownRssId, dropdownFolderId } = mCommon
+            const sole = _.find(mUser.folderList, { key: dropdownFolderId })
+            if (sole) {
+              sole.childrenObj[dropdownRssId].children.forEach((u) => {
+                delete mUser.viewObj[u.id]
+                mUser.collectList = mUser.collectList.filter((h) => h !== u.id)
+              })
+              delete sole.childrenObj[dropdownRssId]
+            }
+          }}
+        >
+          删除
+        </div>
+      ),
     },
   ]
 
@@ -244,7 +273,17 @@ const App = () => {
                       </div>
                       <div className='menu-list-item-right'>
                         {state.isShowSetting ? (
-                          <Dropdown menu={{ items: settingDropdown }} placement='bottom' trigger={['click']}>
+                          <Dropdown
+                            menu={{ items: settingDropdown }}
+                            placement='bottom'
+                            trigger={['click']}
+                            onOpenChange={(e) => {
+                              if (e) {
+                                mCommon.dropdownRssId = key
+                                mCommon.dropdownFolderId = u.key
+                              }
+                            }}
+                          >
                             <Button icon={<SettingOutlined />} type='text' />
                           </Dropdown>
                         ) : (
@@ -290,10 +329,23 @@ const App = () => {
                 isModalFolder: false,
               })
             }}
-            onOk={(url) => {
-              fetchList(url)
+            onOk={() => {
               setState({
                 isModalFolder: false,
+              })
+            }}
+          />
+        )}
+        {state.isModalRss && (
+          <ModalRss
+            onCancel={() => {
+              setState({
+                isModalRss: false,
+              })
+            }}
+            onOk={() => {
+              setState({
+                isModalRss: false,
               })
             }}
           />
