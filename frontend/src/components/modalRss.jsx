@@ -39,6 +39,12 @@ export default function Index(props) {
     if (sole) {
       const soleRss = sole.childrenObj[dropdownRssId]
       soleRss.title = res.title
+      console.log({ res })
+      if (res.folder !== dropdownFolderId) {
+        const soleNew = _.find(mUser.folderList, { key: res.folder })
+        delete sole.childrenObj[dropdownRssId]
+        soleNew.childrenObj[dropdownRssId] = soleRss
+      }
       props.onOk()
     }
   }
