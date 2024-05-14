@@ -43,6 +43,7 @@ const App = () => {
                       window.scrollTo(0, 0)
                       mCommon.htmlString = sole.description
                       mCommon.htmlId = sole.id
+                      mCommon.htmlLink = sole.link
                     }
                   }}
                 >

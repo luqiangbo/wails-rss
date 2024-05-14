@@ -30,9 +30,23 @@ const App = () => {
       </div>
       <div>
         <Segmented
-          options={['原文', '网页']}
+          options={[
+            {
+              label: '原文',
+              value: '0',
+            },
+            {
+              label: '原文(宽屏)',
+              value: '1',
+            },
+            {
+              label: '网页',
+              value: '2',
+            },
+          ]}
+          value={snapCommon.radioHtmlShow}
           onChange={(value) => {
-            console.log(value) // string
+            mCommon.radioHtmlShow = value
           }}
         />
       </div>

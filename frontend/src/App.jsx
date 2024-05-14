@@ -1,7 +1,8 @@
 import { Row, Col, Spin } from 'antd'
 import { useSnapshot } from 'valtio'
+import classNames from 'classnames'
 
-import { mCommon } from './store'
+import { mCommon, mUser } from './store'
 import CMenuList from './components/menuList'
 import CMenuListChildren from './components/menuListChildren'
 import CMenuDescription from './components/menuDescription'
@@ -10,10 +11,16 @@ import './styles/App.less'
 
 function App() {
   const snapCommon = useSnapshot(mCommon)
+  const snapUser = useSnapshot(mUser)
 
   return (
     <Spin tip='Loading...' spinning={snapCommon.spinning}>
-      <div className='rss-app'>
+      <div
+        className={classNames('rss-app', {
+          'theme-sun': snapUser.outlined === 'sun',
+          'theme-moon': snapUser.outlined === 'moon',
+        })}
+      >
         <CHeaders />
         <main>
           <Row>
