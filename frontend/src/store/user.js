@@ -16,6 +16,7 @@ export const mUser = proxyWithPersist(
     activeTitle: '',
     viewObj: {}, // 观看
     collectList: [], // 收藏
+    outlined: 'sun', // sun moon
   },
   {
     key: 'mUser',

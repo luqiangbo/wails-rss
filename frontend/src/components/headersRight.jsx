@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSetState } from 'ahooks'
 import { useSnapshot } from 'valtio'
-import { Rate } from 'antd'
+import { Rate, Segmented } from 'antd'
 
 import { mUser, mCommon } from '../store'
 
@@ -28,7 +28,14 @@ const App = () => {
           />
         ) : null}
       </div>
-      <div></div>
+      <div>
+        <Segmented
+          options={['原文', '网页']}
+          onChange={(value) => {
+            console.log(value) // string
+          }}
+        />
+      </div>
     </div>
   )
 }

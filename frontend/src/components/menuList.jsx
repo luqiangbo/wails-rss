@@ -8,6 +8,10 @@ import {
   WechatOutlined,
   MailOutlined,
   RedoOutlined,
+  EllipsisOutlined,
+  FormOutlined,
+  SunOutlined,
+  MoonOutlined,
 } from '@ant-design/icons'
 import { useSetState } from 'ahooks'
 import { useSnapshot } from 'valtio'
@@ -21,6 +25,7 @@ import { dbSetItem } from '../utils/storage'
 import { extractFirstNChars, stringToColour } from '../utils/index'
 import _ from '../utils/lodash'
 import { RssFeedAdd } from '../../wailsjs/go/main/App'
+import { BrowserOpenURL } from '../../wailsjs/runtime/runtime'
 
 const Panel = Collapse.Panel
 
@@ -235,7 +240,7 @@ const App = () => {
                   header={u.value}
                   extra={
                     state.isShowSetting ? (
-                      <EditOutlined
+                      <FormOutlined
                         onClick={() => {
                           setState({ isModalFolder: true })
                           mCommon.modalFolderType = 'edit'
@@ -284,7 +289,7 @@ const App = () => {
                               }
                             }}
                           >
-                            <Button icon={<SettingOutlined />} type='text' />
+                            <Button icon={<EllipsisOutlined />} type='text' />
                           </Dropdown>
                         ) : (
                           <div>
@@ -302,9 +307,20 @@ const App = () => {
           </div>
         </Scrollbars>
         <div className='config'>
-          <Button type='text' icon={<GithubOutlined />}></Button>
-          <Button type='text' icon={<WechatOutlined />}></Button>
-          <Button type='text' icon={<MailOutlined />}></Button>
+          <Button
+            type='text'
+            icon={<GithubOutlined />}
+            onClick={() => {
+              BrowserOpenURL('https://github.com/luqiangbo/wails-rss')
+            }}
+          ></Button>
+          <Button
+            type='text'
+            icon={snapUser.outlined === 'moon' ? <MoonOutlined /> : <SunOutlined />}
+            onClick={() => {
+              mUser.outlined = mUser.outlined === 'moon' ? 'sun' : 'moon'
+            }}
+          ></Button>
         </div>
         {state.isModalUpdate && (
           <ModalUpdate
