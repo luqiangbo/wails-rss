@@ -38,7 +38,7 @@ const App = () => {
           )}
         </div>
       ) : (
-        <div className='p-10'>
+        <div className='p-10 pt-40 min-h-lvh'>
           <Empty />
         </div>
       )}

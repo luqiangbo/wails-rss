@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { Collapse, Input, Button, Dropdown, Avatar, Divider, message, Tag } from 'antd'
 import {
-  EditOutlined,
   PlusOutlined,
   SettingOutlined,
   GithubOutlined,
@@ -12,6 +11,7 @@ import {
   FormOutlined,
   SunOutlined,
   MoonOutlined,
+  EditOutlined,
 } from '@ant-design/icons'
 import { useSetState } from 'ahooks'
 import { useSnapshot } from 'valtio'
@@ -21,6 +21,7 @@ import { mUser, mCommon, mUserActions } from '../store'
 import ModalUpdate from './modalUpdate'
 import ModalFolder from './modalFolder'
 import ModalRss from './modalRss'
+import ModalSetting from './modalSetting'
 import { dbSetItem } from '../utils/storage'
 import { extractFirstNChars, stringToColour } from '../utils/index'
 import _ from '../utils/lodash'
@@ -37,6 +38,7 @@ const App = () => {
     isShowSetting: false,
     isModalFolder: false,
     isModalRss: false,
+    isModalSetting: false,
     fastList: [
       {
         key: 0,
@@ -220,7 +222,7 @@ const App = () => {
           </Dropdown>
           <Button
             type={state.isShowSetting ? 'primary' : 'default'}
-            icon={<SettingOutlined />}
+            icon={<EditOutlined />}
             onClick={() => {
               setState({
                 isShowSetting: !state.isShowSetting,
@@ -239,7 +241,7 @@ const App = () => {
                 header={u.value}
                 extra={
                   state.isShowSetting ? (
-                    <FormOutlined
+                    <EditOutlined
                       onClick={() => {
                         setState({ isModalFolder: true })
                         mCommon.modalFolderType = 'edit'
@@ -320,6 +322,15 @@ const App = () => {
             mUser.outlined = mUser.outlined === 'moon' ? 'sun' : 'moon'
           }}
         ></Button>
+        <Button
+          type='text'
+          icon={<SettingOutlined />}
+          onClick={() => {
+            setState({
+              isModalSetting: true,
+            })
+          }}
+        ></Button>
       </div>
       {state.isModalUpdate && (
         <ModalUpdate
@@ -361,6 +372,20 @@ const App = () => {
           onOk={() => {
             setState({
               isModalRss: false,
+            })
+          }}
+        />
+      )}
+      {state.isModalSetting && (
+        <ModalSetting
+          onCancel={() => {
+            setState({
+              isModalSetting: false,
+            })
+          }}
+          onOk={() => {
+            setState({
+              isModalSetting: false,
             })
           }}
         />

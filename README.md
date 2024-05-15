@@ -1,5 +1,9 @@
 # README
 
+> 使用 wails 搭建简易的 rss
+
+![alt text](image.png)
+
 ## dev
 
 ```bash

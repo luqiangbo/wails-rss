@@ -20,7 +20,7 @@ const Good = () => {
   })
 
   useEffect(() => {
-    if (snapUser.outlined === 'sun') {
+    if (mUser.outlined === 'sun') {
       setState({
         algorithm: theme.defaultAlgorithm,
         token: {

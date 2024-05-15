@@ -1,29 +1,29 @@
 import { proxyWithPersist } from './index'
 import { isSameDay } from '../utils/index'
 
-export const mUser = proxyWithPersist(
-  {
-    folderList: [
-      {
-        key: '0',
-        value: '默认',
-        childrenObj: {},
-      },
-    ],
-    activeFolder: '',
-    activeRss: '',
-    activeFast: -1,
-    activeTitle: '',
-    viewObj: {}, // 观看
-    collectList: [], // 收藏
-    outlined: 'sun', // sun moon
-  },
-  {
-    key: 'mUser',
-  },
-)
+const initialState = {
+  folderList: [
+    {
+      key: '0',
+      value: '默认',
+      childrenObj: {},
+    },
+  ],
+  activeFolder: '',
+  activeRss: '',
+  activeFast: -1,
+  activeTitle: '',
+  viewObj: {},
+  collectList: [],
+  outlined: 'sun',
+}
+
+export const mUser = proxyWithPersist(initialState, { key: 'mUser' })
 
 export const mUserActions = {
+  reset: () => {
+    Object.assign(mUser, initialState)
+  },
   onRssActive: () => {
     let res = []
     console.log('onRssActive', { activeFast: mUser.activeFast })
