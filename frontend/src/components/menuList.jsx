@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Collapse, Input, Button, Dropdown, Avatar, Affix, Divider, message, Tag } from 'antd'
+import { Collapse, Input, Button, Dropdown, Avatar, Divider, message, Tag } from 'antd'
 import {
   EditOutlined,
   PlusOutlined,
@@ -188,186 +188,184 @@ const App = () => {
   }
 
   return (
-    <Affix offsetTop={50}>
-      <div className='menu'>
-        <div className='fast-list'>
-          {state.fastList.map((u) => (
-            <Button
-              block
-              key={u.key}
-              size='middle'
-              className='my-1 flex justify-between'
-              type={snapUser.activeFast === u.key ? '' : 'text'}
-              onClick={() => {
-                mUser.activeTitle = u.value
-                mUser.activeFast = u.key
-              }}
-            >
-              <div>{u.value}</div>
-              <Tag color='volcano' bordered={false}>
-                {mUserActions.onViewTypeLength(u.key)}
-              </Tag>
-            </Button>
-          ))}
-        </div>
-        <Divider>订阅源</Divider>
-        <div className='take'>
-          <div className='left'>
-            <Input placeholder='搜索' />
-          </div>
-          <div>
-            <Dropdown menu={{ items: itemsDropdown }} placement='bottom' trigger={['click']}>
-              <Button icon={<PlusOutlined />} />
-            </Dropdown>
-            <Button
-              type={state.isShowSetting ? 'primary' : 'default'}
-              icon={<SettingOutlined />}
-              onClick={() => {
-                setState({
-                  isShowSetting: !state.isShowSetting,
-                })
-              }}
-            />
-            <Button icon={<RedoOutlined />} onClick={onUpdateAll} />
-          </div>
-        </div>
-        <Scrollbars style={{ height: '100%' }}>
-          <div className='menu-list'>
-            <Collapse defaultActiveKey={['0']} bordered={false}>
-              {snapUser.folderList.map((u) => (
-                <Panel
-                  key={u.key}
-                  header={u.value}
-                  extra={
-                    state.isShowSetting ? (
-                      <FormOutlined
-                        onClick={() => {
-                          setState({ isModalFolder: true })
-                          mCommon.modalFolderType = 'edit'
-                          mCommon.modalFolderKey = u.key
-                          mCommon.modalFolderValue = u.value
-                        }}
-                      />
-                    ) : (
-                      ''
-                    )
-                  }
-                >
-                  {Object.entries(u.childrenObj).map(([key, value]) => (
-                    <dev className='menu-list-item' key={key}>
-                      <div
-                        className='menu-list-item-left'
-                        onClick={() => {
-                          mUser.activeFast = -1
-                          mUser.activeTitle = value.title
-                          mUser.activeFolder = u.key
-                          mUser.activeRss = key
-                        }}
-                      >
-                        <Avatar
-                          style={{
-                            verticalAlign: 'middle',
-                            backgroundColor: stringToColour(value.id),
-                          }}
-                          size={30}
-                          gap={2}
-                        >
-                          {value.title[0]}
-                        </Avatar>
-                        <div className='menu-list-item-left-value'>{value.title}</div>
-                      </div>
-                      <div className='menu-list-item-right'>
-                        {state.isShowSetting ? (
-                          <Dropdown
-                            menu={{ items: settingDropdown }}
-                            placement='bottom'
-                            trigger={['click']}
-                            onOpenChange={(e) => {
-                              if (e) {
-                                mCommon.dropdownRssId = key
-                                mCommon.dropdownFolderId = u.key
-                              }
-                            }}
-                          >
-                            <Button icon={<EllipsisOutlined />} type='text' />
-                          </Dropdown>
-                        ) : (
-                          <div>
-                            <Tag color='volcano' bordered={false}>
-                              {mUserActions.onViewLength(u.key, key)}
-                            </Tag>
-                          </div>
-                        )}
-                      </div>
-                    </dev>
-                  ))}
-                </Panel>
-              ))}
-            </Collapse>
-          </div>
-        </Scrollbars>
-        <div className='config'>
+    <div className='menu'>
+      <div className='fast-list'>
+        {state.fastList.map((u) => (
           <Button
-            type='text'
-            icon={<GithubOutlined />}
+            block
+            key={u.key}
+            size='middle'
+            className='my-1 flex justify-between'
+            type={snapUser.activeFast === u.key ? '' : 'text'}
             onClick={() => {
-              BrowserOpenURL('https://github.com/luqiangbo/wails-rss')
+              mUser.activeTitle = u.value
+              mUser.activeFast = u.key
             }}
-          ></Button>
-          <Button
-            type='text'
-            icon={snapUser.outlined === 'moon' ? <MoonOutlined /> : <SunOutlined />}
-            onClick={() => {
-              mUser.outlined = mUser.outlined === 'moon' ? 'sun' : 'moon'
-            }}
-          ></Button>
-        </div>
-        {state.isModalUpdate && (
-          <ModalUpdate
-            onCancel={() => {
-              setState({
-                isModalUpdate: false,
-              })
-            }}
-            onOk={(url) => {
-              fetchList(url)
-              setState({
-                isModalUpdate: false,
-              })
-            }}
-          />
-        )}
-
-        {state.isModalFolder && (
-          <ModalFolder
-            onCancel={() => {
-              setState({
-                isModalFolder: false,
-              })
-            }}
-            onOk={() => {
-              setState({
-                isModalFolder: false,
-              })
-            }}
-          />
-        )}
-        {state.isModalRss && (
-          <ModalRss
-            onCancel={() => {
-              setState({
-                isModalRss: false,
-              })
-            }}
-            onOk={() => {
-              setState({
-                isModalRss: false,
-              })
-            }}
-          />
-        )}
+          >
+            <div>{u.value}</div>
+            <Tag color='volcano' bordered={false}>
+              {mUserActions.onViewTypeLength(u.key)}
+            </Tag>
+          </Button>
+        ))}
       </div>
-    </Affix>
+      <Divider>订阅源</Divider>
+      <div className='take'>
+        <div className='left'>
+          <Input placeholder='搜索' />
+        </div>
+        <div>
+          <Dropdown menu={{ items: itemsDropdown }} placement='bottom' trigger={['click']}>
+            <Button icon={<PlusOutlined />} />
+          </Dropdown>
+          <Button
+            type={state.isShowSetting ? 'primary' : 'default'}
+            icon={<SettingOutlined />}
+            onClick={() => {
+              setState({
+                isShowSetting: !state.isShowSetting,
+              })
+            }}
+          />
+          <Button icon={<RedoOutlined />} onClick={onUpdateAll} />
+        </div>
+      </div>
+      <Scrollbars style={{ height: '100%' }}>
+        <div className='menu-list'>
+          <Collapse defaultActiveKey={['0']} bordered={false}>
+            {snapUser.folderList.map((u) => (
+              <Panel
+                key={u.key}
+                header={u.value}
+                extra={
+                  state.isShowSetting ? (
+                    <FormOutlined
+                      onClick={() => {
+                        setState({ isModalFolder: true })
+                        mCommon.modalFolderType = 'edit'
+                        mCommon.modalFolderKey = u.key
+                        mCommon.modalFolderValue = u.value
+                      }}
+                    />
+                  ) : (
+                    ''
+                  )
+                }
+              >
+                {Object.entries(u.childrenObj).map(([key, value]) => (
+                  <dev className='menu-list-item' key={key}>
+                    <div
+                      className='menu-list-item-left'
+                      onClick={() => {
+                        mUser.activeFast = -1
+                        mUser.activeTitle = value.title
+                        mUser.activeFolder = u.key
+                        mUser.activeRss = key
+                      }}
+                    >
+                      <Avatar
+                        style={{
+                          verticalAlign: 'middle',
+                          backgroundColor: stringToColour(value.id),
+                        }}
+                        size={30}
+                        gap={2}
+                      >
+                        {value.title[0]}
+                      </Avatar>
+                      <div className='menu-list-item-left-value'>{value.title}</div>
+                    </div>
+                    <div className='menu-list-item-right'>
+                      {state.isShowSetting ? (
+                        <Dropdown
+                          menu={{ items: settingDropdown }}
+                          placement='bottom'
+                          trigger={['click']}
+                          onOpenChange={(e) => {
+                            if (e) {
+                              mCommon.dropdownRssId = key
+                              mCommon.dropdownFolderId = u.key
+                            }
+                          }}
+                        >
+                          <Button icon={<EllipsisOutlined />} type='text' />
+                        </Dropdown>
+                      ) : (
+                        <div>
+                          <Tag color='volcano' bordered={false}>
+                            {mUserActions.onViewLength(u.key, key)}
+                          </Tag>
+                        </div>
+                      )}
+                    </div>
+                  </dev>
+                ))}
+              </Panel>
+            ))}
+          </Collapse>
+        </div>
+      </Scrollbars>
+      <div className='config'>
+        <Button
+          type='text'
+          icon={<GithubOutlined />}
+          onClick={() => {
+            BrowserOpenURL('https://github.com/luqiangbo/wails-rss')
+          }}
+        ></Button>
+        <Button
+          type='text'
+          icon={snapUser.outlined === 'moon' ? <MoonOutlined /> : <SunOutlined />}
+          onClick={() => {
+            mUser.outlined = mUser.outlined === 'moon' ? 'sun' : 'moon'
+          }}
+        ></Button>
+      </div>
+      {state.isModalUpdate && (
+        <ModalUpdate
+          onCancel={() => {
+            setState({
+              isModalUpdate: false,
+            })
+          }}
+          onOk={(url) => {
+            fetchList(url)
+            setState({
+              isModalUpdate: false,
+            })
+          }}
+        />
+      )}
+
+      {state.isModalFolder && (
+        <ModalFolder
+          onCancel={() => {
+            setState({
+              isModalFolder: false,
+            })
+          }}
+          onOk={() => {
+            setState({
+              isModalFolder: false,
+            })
+          }}
+        />
+      )}
+      {state.isModalRss && (
+        <ModalRss
+          onCancel={() => {
+            setState({
+              isModalRss: false,
+            })
+          }}
+          onOk={() => {
+            setState({
+              isModalRss: false,
+            })
+          }}
+        />
+      )}
+    </div>
   )
 }
 export default App
