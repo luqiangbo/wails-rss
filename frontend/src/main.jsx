@@ -20,7 +20,8 @@ const Good = () => {
   })
 
   useEffect(() => {
-    if (mUser.outlined === 'sun') {
+    document.documentElement.setAttribute('data-theme', mUser.theme)
+    if (mUser.theme === 'light') {
       setState({
         algorithm: theme.defaultAlgorithm,
         token: {
@@ -32,7 +33,7 @@ const Good = () => {
         algorithm: theme.darkAlgorithm,
       })
     }
-  }, [snapUser.outlined])
+  }, [snapUser.theme])
 
   return (
     <ConfigProvider

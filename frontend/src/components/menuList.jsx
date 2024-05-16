@@ -317,9 +317,11 @@ const App = () => {
         ></Button>
         <Button
           type='text'
-          icon={snapUser.outlined === 'moon' ? <MoonOutlined /> : <SunOutlined />}
+          icon={snapUser.theme === 'dark' ? <MoonOutlined /> : <SunOutlined />}
           onClick={() => {
-            mUser.outlined = mUser.outlined === 'moon' ? 'sun' : 'moon'
+            const _theme = mUser.theme === 'dark' ? 'light' : 'dark'
+            mUser.theme = _theme
+            document.documentElement.setAttribute('data-theme', _theme)
           }}
         ></Button>
         <Button

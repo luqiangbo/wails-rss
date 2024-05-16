@@ -15,7 +15,7 @@ const initialState = {
   activeTitle: '',
   viewObj: {},
   collectList: [],
-  outlined: 'sun',
+  theme: 'light',
 }
 
 export const mUser = proxyWithPersist(initialState, { key: 'mUser' })

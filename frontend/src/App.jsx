@@ -15,12 +15,7 @@ function App() {
 
   return (
     <Spin tip='Loading...' spinning={snapCommon.spinning}>
-      <div
-        className={classNames('rss-app', {
-          'theme-sun': snapUser.outlined === 'sun',
-          'theme-moon': snapUser.outlined === 'moon',
-        })}
-      >
+      <div className={classNames('rss-app')}>
         <CHeaders />
         <main>
           <Row>
