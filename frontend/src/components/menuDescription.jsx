@@ -1,40 +1,81 @@
 import React, { useEffect } from 'react'
 import { useSetState } from 'ahooks'
 import { useSnapshot } from 'valtio'
-import { Empty } from 'antd'
+import { Empty, Modal } from 'antd'
+import { ExclamationCircleFilled } from '@ant-design/icons'
 import classNames from 'classnames'
 import { Parser } from 'htmlparser2'
 
 import { mCommon, mUser } from '../store'
+import { BrowserOpenURL } from '../../wailsjs/runtime/runtime'
+
+const { confirm } = Modal
 
 const App = () => {
   const snapCommon = useSnapshot(mCommon)
   const [state, setState] = useSetState({})
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    binding()
+  }, [snapCommon.htmlString])
+
+  const binding = () => {
+    const container = document.querySelectorAll('.descrition-good')[0]
+    const clickableElements = container.querySelectorAll('a')
+
+    const handleClick = (event) => {
+      event.preventDefault() // 阻止默认行为(如果是链接)
+      const href = event.target.dataset.href
+      // 在此处添加您的自定义逻辑
+      showConfirm(href)
+    }
+
+    clickableElements.forEach((element) => {
+      // 检查是否已经绑定了相同的事件处理程序
+      if (!element.hasOwnProperty('__clickHandlerBound')) {
+        element.addEventListener('click', handleClick)
+        // 标记该元素已经绑定了事件处理程序
+        element.__clickHandlerBound = true
+      }
+    })
+  }
+
+  const showConfirm = (href) => {
+    confirm({
+      title: '确认跳转?',
+      icon: <ExclamationCircleFilled />,
+      content: href,
+      onOk() {
+        BrowserOpenURL(href)
+      },
+      onCancel() {},
+    })
+  }
 
   const modifyHTML = (htmlString) => {
     let modifiedHTML = ''
-    const parser = new Parser({
-      onopentag: (tagname, attribs) => {
-        let context = `<${tagname}>`
-        if (tagname === 'img') {
-          const good = Object.entries(attribs).map(([key, value]) => ` ${key}=${value} `)
-          context = `<${tagname} ${good}/>`
-        }
-        if (tagname === 'a') {
-          console.log(attribs)
-          context = `<${tagname} hreg='#' >`
-        }
-        modifiedHTML += context
+    const parser = new Parser(
+      {
+        onopentag: (tagname, attribs) => {
+          let context = `<${tagname}>`
+          if (tagname === 'img') {
+            const good = Object.entries(attribs).map(([key, value]) => ` ${key}=${value} `)
+            context = `<${tagname} src=${attribs.src}/>`
+          }
+          if (tagname === 'a') {
+            context = `<${tagname} data-href=${attribs.href}>`
+          }
+          modifiedHTML += context
+        },
+        ontext(text) {
+          modifiedHTML += text
+        },
+        onclosetag(tagname) {
+          modifiedHTML += `</${tagname}>`
+        },
       },
-      ontext(text) {
-        modifiedHTML += text
-      },
-      onclosetag(tagname) {
-        modifiedHTML += `</${tagname}>`
-      },
-    })
+      { decodeEntities: true },
+    )
 
     parser.write(htmlString)
     parser.end()
@@ -44,7 +85,7 @@ const App = () => {
   }
 
   return (
-    <>
+    <div className='descrition-good'>
       {snapCommon.htmlString ? (
         <div className='descrition-main'>
           {snapCommon.radioHtmlShow === '2' ? (
@@ -73,7 +114,7 @@ const App = () => {
           <Empty />
         </div>
       )}
-    </>
+    </div>
   )
 }
 export default App
