@@ -3,6 +3,7 @@ import { useSetState } from 'ahooks'
 import { useSnapshot } from 'valtio'
 import { Empty } from 'antd'
 import classNames from 'classnames'
+import { Parser } from 'htmlparser2'
 
 import { mCommon, mUser } from '../store'
 
@@ -11,6 +12,36 @@ const App = () => {
   const [state, setState] = useSetState({})
 
   useEffect(() => {}, [])
+
+  const modifyHTML = (htmlString) => {
+    let modifiedHTML = ''
+    const parser = new Parser({
+      onopentag: (tagname, attribs) => {
+        let context = `<${tagname}>`
+        if (tagname === 'img') {
+          const good = Object.entries(attribs).map(([key, value]) => ` ${key}=${value} `)
+          context = `<${tagname} ${good}/>`
+        }
+        if (tagname === 'a') {
+          console.log(attribs)
+          context = `<${tagname} hreg='#' >`
+        }
+        modifiedHTML += context
+      },
+      ontext(text) {
+        modifiedHTML += text
+      },
+      onclosetag(tagname) {
+        modifiedHTML += `</${tagname}>`
+      },
+    })
+
+    parser.write(htmlString)
+    parser.end()
+    console.log({ modifiedHTML, htmlString })
+
+    return modifiedHTML
+  }
 
   return (
     <>
@@ -33,7 +64,7 @@ const App = () => {
                 'intter-0': snapCommon.radioHtmlShow === '0',
                 'intter-1': snapCommon.radioHtmlShow === '1',
               })}
-              dangerouslySetInnerHTML={{ __html: mCommon.htmlString }}
+              dangerouslySetInnerHTML={{ __html: modifyHTML(snapCommon.htmlString) }}
             />
           )}
         </div>
