@@ -4,4 +4,6 @@ import {main} from '../models';
 
 export function Greet(arg1:string):Promise<string>;
 
+export function Img2base(arg1:string):Promise<main.Response>;
+
 export function RssFeedAdd(arg1:string):Promise<main.Response>;

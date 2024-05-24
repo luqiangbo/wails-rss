@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import { Parser } from 'htmlparser2'
 
 import { mCommon, mUser } from '../store'
+import { Img2base } from '../../wailsjs/go/main/App'
 import { BrowserOpenURL } from '../../wailsjs/runtime/runtime'
 
 const { confirm } = Modal
@@ -42,7 +43,7 @@ const App = () => {
 
   const showConfirm = (href) => {
     confirm({
-      title: '确认跳转?',
+      title: '即将离开wails-rss，请注意账号财产安全',
       icon: <ExclamationCircleFilled />,
       content: href,
       onOk() {
@@ -56,11 +57,20 @@ const App = () => {
     let modifiedHTML = ''
     const parser = new Parser(
       {
-        onopentag: (tagname, attribs) => {
+        onopentag: async (tagname, attribs) => {
           let context = `<${tagname}>`
           if (tagname === 'img') {
             const good = Object.entries(attribs).map(([key, value]) => ` ${key}=${value} `)
-            context = `<${tagname} src=${attribs.src}/>`
+            let soleSrc = attribs.src
+            if (soleSrc.endsWith('/')) {
+              soleSrc = soleSrc.substring(0, str.length - 1)
+            }
+            const img2base = await Img2base(soleSrc)
+            if (img2base.code === 0) {
+              soleSrc = 'data:image/jpeg;base64,' + img2base.data
+            }
+            console.log({ soleSrc })
+            context = `<${tagname} src=${soleSrc} />`
           }
           if (tagname === 'a') {
             context = `<${tagname} data-href=${attribs.href}>`
