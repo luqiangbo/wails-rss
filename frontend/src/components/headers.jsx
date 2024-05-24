@@ -20,7 +20,6 @@ const App = () => {
           <Col span={4}>
             <div className='header-1'>
               <img src={imgLogo} className='logo' />
-              ails-rss
             </div>
           </Col>
           <Col span={4}>

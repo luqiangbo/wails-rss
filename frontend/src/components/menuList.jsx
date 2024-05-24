@@ -267,6 +267,7 @@ const App = () => {
                     >
                       <Avatar
                         style={{
+                          flex: '0 0 30px',
                           verticalAlign: 'middle',
                           backgroundColor: stringToColour(value.id),
                         }}
