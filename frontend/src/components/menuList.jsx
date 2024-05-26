@@ -4,11 +4,8 @@ import {
   PlusOutlined,
   SettingOutlined,
   GithubOutlined,
-  WechatOutlined,
-  MailOutlined,
   RedoOutlined,
   EllipsisOutlined,
-  FormOutlined,
   SunOutlined,
   MoonOutlined,
   EditOutlined,
@@ -167,6 +164,11 @@ const App = () => {
 
   const fetchList = (rssList) => {
     mCommon.spinning = true
+    setTimeout(() => {
+      if (mCommon.spinning) {
+        mCommon.spinning = false
+      }
+    }, 30 * 1000)
     RssFeedAdd(rssList).then((res) => {
       mCommon.spinning = false
       if (res.code === 0) {

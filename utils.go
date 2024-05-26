@@ -57,7 +57,7 @@ func ParseRSSFeed(url string) (*RSSFeed, error) {
 	fp.UserAgent = "MyCustomAgent 1.0"
 	feed, err := fp.ParseURL(url)
 	// fmt.Println(feed)
-	// fmt.Println(err)
+	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
