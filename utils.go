@@ -44,11 +44,12 @@ type RSSFeed struct {
 
 // RSSItem 是 RSS 订阅项的数据结构
 type RSSItem struct {
-	Id          string `json:"id"`
-	Title       string `json:"title"`
-	Link        string `json:"link"`
-	Description string `json:"description"`
-	PubDate     string `json:"pub_date"`
+	Id          string  `json:"id"`
+	Title       string  `json:"title"`
+	Link        string  `json:"link"`
+	Description string  `json:"description"`
+	Content     *string `json:"content"`
+	PubDate     string  `json:"pub_date"`
 }
 
 // 解析订阅源
@@ -77,6 +78,7 @@ func ParseRSSFeed(url string) (*RSSFeed, error) {
 			Title:       item.Title,
 			Link:        item.Link,
 			Description: item.Description,
+			Content:     &item.Content,
 			PubDate:     formattedPubDate,
 		})
 	}

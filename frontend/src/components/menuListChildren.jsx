@@ -40,7 +40,7 @@ const App = () => {
                   const sole = await dbGetItem(u.id)
                   if (sole) {
                     window.scrollTo(0, 0)
-                    mCommon.htmlString = sole.description
+                    mCommon.htmlString = sole.content ? sole.content : sole.description
                     mCommon.htmlId = sole.id
                     mCommon.htmlLink = sole.link
                   }

@@ -1,21 +1,54 @@
 import { useEffect } from 'react'
 import { useSetState } from 'ahooks'
-import { Modal, Input, message, Form } from 'antd'
+import { Modal, Input, message, Form, Select } from 'antd'
 
 const { TextArea } = Input
 
 export default function Index(props) {
   const [formBasic] = Form.useForm()
-  const [state, setState] = useSetState({})
+  const [state, setState] = useSetState({
+    options: [
+      {
+        value: 'https://www.zhihu.com/rss',
+        label: '知乎',
+      },
+      {
+        value: 'https://www.ithome.com/rss/',
+        label: 'ithome',
+      },
+      {
+        value: 'https://www.ifanr.com/feed',
+        label: '爱范',
+      },
+      {
+        value: 'https://sspai.com/feed',
+        label: '少数派',
+      },
+      {
+        value: 'https://plink.anyfeeder.com/zaobao/realtime/china',
+        label: '联合早报',
+      },
+      {
+        value: 'http://feed.appinn.com/',
+        label: '小众软件',
+      },
+      {
+        value: 'http://www.geekpark.net/rss',
+        label: '极客公园',
+      },
+      {
+        value: 'https://36kr.com/feed',
+        label: '36氪',
+      },
+    ],
+  })
   const [messageApi, contextHolder] = message.useMessage()
 
-  useEffect(() => {
-    formBasic.setFieldValue('name', 'https://www.zhihu.com/rss,https://www.ithome.com/rss/')
-  }, [])
+  useEffect(() => {}, [])
 
   const onFinish = (values) => {
     console.log('Success:', values)
-    props.onOk(values.name)
+    props.onOk(values.name.join(','))
   }
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo)
@@ -57,7 +90,14 @@ export default function Index(props) {
               },
             ]}
           >
-            <TextArea placeholder='请输入订阅源地址, 支持RSS/ATOM/JSON/RDF' rows={4} />
+            <Select
+              mode='tags'
+              style={{
+                width: '100%',
+              }}
+              tokenSeparators={[',']}
+              options={state.options}
+            />
           </Form.Item>
         </Form>
       </Modal>

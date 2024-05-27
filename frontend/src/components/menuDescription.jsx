@@ -58,9 +58,10 @@ const App = () => {
     const parser = new Parser(
       {
         onopentag: async (tagname, attribs) => {
-          let context = `<${tagname}>`
+          let context = `<${tagname} style="${attribs.style ? attribs.style : ''}" >`
           if (tagname === 'img') {
             const good = Object.entries(attribs).map(([key, value]) => ` ${key}=${value} `)
+            console.log({ good, attribs })
             let soleSrc = attribs.src
             if (soleSrc.indexOf('?') !== -1) {
               soleSrc = soleSrc.split('?')[0]
@@ -73,7 +74,7 @@ const App = () => {
             //   soleSrc = 'data:image/jpeg;base64,' + img2base.data
             // }
             console.log(1, { soleSrc })
-            context = `<${tagname} src=${soleSrc} />`
+            context = `<${tagname} alt="${attribs.alt ? attribs.alt : 'img'}" src="${soleSrc}" />`
           }
           if (tagname === 'a') {
             context = `<${tagname} data-href=${attribs.href}>`
@@ -81,11 +82,11 @@ const App = () => {
           modifiedHTML += context
         },
         ontext(text) {
-          console.log(2)
+          // console.log(2)
           modifiedHTML += text
         },
         onclosetag(tagname) {
-          console.log(3)
+          // console.log(3)
           modifiedHTML += `</${tagname}>`
         },
       },

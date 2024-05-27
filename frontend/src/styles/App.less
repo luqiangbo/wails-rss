@@ -165,9 +165,8 @@ body {
         unicode-bidi: isolate;
       }
       img {
-        display: block;
+        display: inline-block;
         margin: 0 auto;
-        width: 100%;
         height: auto;
         object-fit: cover; /* 或 contain */
       }
@@ -179,6 +178,9 @@ body {
         cursor: pointer;
         transition: color 0.3s;
         display: inline-block;
+      }
+      a:hover {
+        border-bottom: 1px solid #1677ff;
       }
     }
 
