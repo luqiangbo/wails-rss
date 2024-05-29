@@ -5,6 +5,7 @@ import { useSnapshot } from 'valtio'
 
 import { mUser, mCommon, mUserActions } from '../store'
 import _ from '../utils/lodash'
+import { dbClear } from '../utils/storage'
 
 const { TextArea } = Input
 
@@ -36,6 +37,7 @@ export default function Index(props) {
           description='这将导致软件恢复默认'
           onConfirm={() => {
             mUserActions.reset()
+            dbClear()
           }}
           onCancel={() => {}}
           okText='确认'

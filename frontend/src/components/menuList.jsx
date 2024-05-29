@@ -24,6 +24,7 @@ import { extractFirstNChars, stringToColour } from '../utils/index'
 import _ from '../utils/lodash'
 import { RssFeedAdd } from '../../wailsjs/go/main/App'
 import { BrowserOpenURL } from '../../wailsjs/runtime/runtime'
+import classNames from 'classnames'
 
 const Panel = Collapse.Panel
 
@@ -158,6 +159,7 @@ const App = () => {
         title: u.title,
         link: u.link,
         children: list,
+        show: true,
       }
     })
   }
@@ -216,7 +218,32 @@ const App = () => {
       <Divider>订阅源</Divider>
       <div className='take'>
         <div className='left'>
-          <Input placeholder='搜索' />
+          <Input
+            placeholder='搜索'
+            onChange={(e) => {
+              const value = e.target.value
+              const folderList = mUser.folderList
+              const folderTrim = []
+              folderList.forEach((v) => {
+                let childrenObj = {}
+                Object.entries(v.childrenObj).forEach(([objKey, objValue]) => {
+                  if (
+                    objValue.title.toLowerCase().includes(value.toLowerCase()) ||
+                    objValue.link.toLowerCase().includes(value.toLowerCase())
+                  ) {
+                    childrenObj[objKey] = { ...objValue, show: true }
+                  } else {
+                    childrenObj[objKey] = { ...objValue, show: false }
+                  }
+                })
+                folderTrim.push({
+                  ...v,
+                  childrenObj,
+                })
+              })
+              mUser.folderList = folderTrim
+            }}
+          />
         </div>
         <div>
           <Dropdown menu={{ items: itemsDropdown }} placement='bottom' trigger={['click']}>
@@ -257,7 +284,12 @@ const App = () => {
                 }
               >
                 {Object.entries(u.childrenObj).map(([key, value]) => (
-                  <dev className='menu-list-item' key={key}>
+                  <dev
+                    className={classNames('menu-list-item', {
+                      hide: !value.show,
+                    })}
+                    key={key}
+                  >
                     <div
                       className='menu-list-item-left'
                       onClick={() => {

@@ -45,6 +45,7 @@ type RSSFeed struct {
 // RSSItem 是 RSS 订阅项的数据结构
 type RSSItem struct {
 	Id          string  `json:"id"`
+	RssId       string  `json:"rss_id"`
 	Title       string  `json:"title"`
 	Link        string  `json:"link"`
 	Description string  `json:"description"`
@@ -62,25 +63,34 @@ func ParseRSSFeed(url string) (*RSSFeed, error) {
 	if err != nil {
 		return nil, err
 	}
+	rssId := GetIdString(feed.Title)
 	rssFeed := &RSSFeed{
-		Id:    GetIdString(feed.Title),
+		Id:    rssId,
 		Title: feed.Title,
 		Link:  url,
 	}
 
+	maxItems := 99
+	itemCount := 0
+
 	for _, item := range feed.Items {
+		if itemCount >= maxItems {
+			break
+		}
 
 		pubDate := item.PublishedParsed
 		formattedPubDate := pubDate.Format("2006-01-02 15:04:05")
 
 		rssFeed.Items = append(rssFeed.Items, RSSItem{
 			Id:          GetIdString(item.Link),
+			RssId:       rssId,
 			Title:       item.Title,
 			Link:        item.Link,
 			Description: item.Description,
 			Content:     &item.Content,
 			PubDate:     formattedPubDate,
 		})
+		itemCount++
 	}
 
 	return rssFeed, nil

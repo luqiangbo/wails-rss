@@ -10,7 +10,7 @@ export default function Index(props) {
     options: [
       {
         value: 'https://www.zhihu.com/rss',
-        label: '知乎',
+        label: '知乎每日精选',
       },
       {
         value: 'https://www.ithome.com/rss/',
