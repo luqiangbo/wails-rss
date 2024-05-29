@@ -61,19 +61,10 @@ const App = () => {
           let context = `<${tagname} style="${attribs.style ? attribs.style : ''}" >`
           if (tagname === 'img') {
             const good = Object.entries(attribs).map(([key, value]) => ` ${key}=${value} `)
-            console.log({ good, attribs })
             let soleSrc = attribs.src
             if (soleSrc.indexOf('?') !== -1) {
               soleSrc = soleSrc.split('?')[0]
             }
-            // if (soleSrc.endsWith('/')) {
-            //   soleSrc = soleSrc.substring(0, str.length - 1)
-            // }
-            // const img2base = await Img2base(soleSrc)
-            // if (img2base.code === 0) {
-            //   soleSrc = 'data:image/jpeg;base64,' + img2base.data
-            // }
-            console.log(1, { soleSrc })
             context = `<${tagname} alt="${attribs.alt ? attribs.alt : 'img'}" src="${soleSrc}" />`
           }
           if (tagname === 'a') {
@@ -82,11 +73,9 @@ const App = () => {
           modifiedHTML += context
         },
         ontext(text) {
-          // console.log(2)
           modifiedHTML += text
         },
         onclosetag(tagname) {
-          // console.log(3)
           modifiedHTML += `</${tagname}>`
         },
       },
